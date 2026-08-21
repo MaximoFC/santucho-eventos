@@ -2,6 +2,7 @@ import { Navbar } from "@/components/layout/Navbar";
 import { Hero } from "@/components/sections/Hero";
 import { Experiences } from "@/components/sections/Experiences";
 import { Positioning } from "@/components/sections/Positioning";
+import { Footer } from "@/components/layout/Footer";
 
 export default function Home() {
   return (
@@ -45,6 +46,8 @@ export default function Home() {
           className="min-h-screen bg-[#050505]"
         />
       </main>
+
+      <Footer />
     </>
   )
 }

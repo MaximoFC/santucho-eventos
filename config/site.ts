@@ -58,6 +58,7 @@ export const siteConfig = {
     title: 'Experiencias que\nse viven.',
     description: 'Desde una primera idea hasta el último aplauso, nos ocupamos de cada detalle para que tu evento tenga identidad propia.',
   },
+
   positioning: {
     eyebrow: 'Más que un evento',
     title: 'Una experiencia.',
@@ -93,44 +94,59 @@ export const siteConfig = {
       },
     ],
   },
+
   experiences: [
-  {
-    number: "01",
-    category: "SEMANA ESTUDIANTIL",
-    title: "Eventos\nque se sienten",
-    description:
-      "Producción audiovisual para recitales, shows y eventos de gran escala.",
-    image: "/images/semana-estudiantil-preview.PNG",
-    imagePosition: "center 35%",
+    {
+      number: "01",
+      category: "SEMANA ESTUDIANTIL",
+      title: "Eventos\nque se sienten",
+      description:
+        "Producción audiovisual para recitales, shows y eventos de gran escala.",
+      image: "/images/semana-estudiantil-preview.PNG",
+      imagePosition: "center 35%",
+    },
+    {
+      number: "02",
+      category: "FIESTAS",
+      title: "Cada detalle\ncuenta",
+      description:
+        "Una puesta en escena pensada para que cada momento tenga impacto.",
+      image: "/images/semana-estudiantil-preview.PNG",
+      imagePosition: "center 55%",
+    },
+    {
+      number: "03",
+      category: "PEÑAS Y BINGOS",
+      title: "Cada detalle\ncuenta",
+      description:
+        "Una puesta en escena pensada para que cada momento tenga impacto.",
+      image: "/images/matinee-preview.JPG",
+      imagePosition: "center 55%",
+    },
+    {
+      number: "04",
+      category: "MATINÉES",
+      title: "Cada detalle\ncuenta",
+      description:
+        "Una puesta en escena pensada para que cada momento tenga impacto.",
+      image: "/images/matinee-preview.JPG",
+      imagePosition: "center 55%",
+    },
+  ],
+
+  footer: {
+    slogan: 'Hacemos que pase',
+    links: [
+      { label: 'Inicio', href: '#inicio' },
+      { label: 'Servicios', href: '#servicios' },
+      { label: 'Experiencias', href: '#experiencias' },
+      { label: 'Contacto', href: '#contacto' }
+    ],
+    socials: [
+      { label: 'Instagram', href: 'https://instagram.com' },
+      { label: 'facebook', href: 'https://facebook.com' },
+    ]
   },
-  {
-    number: "02",
-    category: "FIESTAS",
-    title: "Cada detalle\ncuenta",
-    description:
-      "Una puesta en escena pensada para que cada momento tenga impacto.",
-    image: "/images/semana-estudiantil-preview.PNG",
-    imagePosition: "center 55%",
-  },
-  {
-    number: "03",
-    category: "PEÑAS Y BINGOS",
-    title: "Cada detalle\ncuenta",
-    description:
-      "Una puesta en escena pensada para que cada momento tenga impacto.",
-    image: "/images/matinee-preview.JPG",
-    imagePosition: "center 55%",
-  },
-  {
-    number: "04",
-    category: "MATINÉES",
-    title: "Cada detalle\ncuenta",
-    description:
-      "Una puesta en escena pensada para que cada momento tenga impacto.",
-    image: "/images/matinee-preview.JPG",
-    imagePosition: "center 55%",
-  },
-]
 } as const;
 
 export type Experience = (typeof siteConfig.experiences)[number]
