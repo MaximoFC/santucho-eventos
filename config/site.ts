@@ -147,6 +147,41 @@ export const siteConfig = {
       { label: 'facebook', href: 'https://facebook.com' },
     ]
   },
+
+  services: [
+    {
+        slug: "robot-led",
+        number: "01",
+        category: "ENTRETENIMIENTO",
+        title: "Robot LED",
+        description:
+            "Una experiencia visual que transforma la pista y convierte cada momento en espectáculo.",
+        image: "/images/matinee-preview.JPG",
+        featured: true,
+    },
+
+    {
+        slug: "cabina-de-fotos",
+        number: "02",
+        category: "EXPERIENCIAS",
+        title: "Cabina de fotos",
+        description:
+            "Un espacio pensado para crear recuerdos y sumar una experiencia interactiva al evento.",
+        image: "/images/matinee-preview.JPG",
+        featured: true,
+    },
+
+    {
+        slug: "servicio-3",
+        number: "03",
+        category: "ENTRETENIMIENTO",
+        title: "Servicio pendiente",
+        description:
+            "Descripción temporal hasta recibir la información definitiva del cliente.",
+        image: "/images/matinee-preview.JPG",
+        featured: true,
+    },
+  ]
 } as const;
 
 export type Experience = (typeof siteConfig.experiences)[number]
