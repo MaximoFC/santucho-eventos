@@ -4,6 +4,7 @@ import { Experiences } from "@/components/sections/Experiences";
 import { Positioning } from "@/components/sections/Positioning";
 import { Services } from "@/components/sections/Services";
 import { Gallery } from "@/components/home/Gallery";
+import { Clients } from "@/components/home/Clients";
 import { Footer } from "@/components/layout/Footer";
 import { FinalCTA } from "@/components/home/FinalCta";
 
@@ -22,6 +23,8 @@ export default function Home() {
         <Services />
 
         <Gallery />
+
+        <Clients />
 
         <FinalCTA />
       </main>

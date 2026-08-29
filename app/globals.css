@@ -32,3 +32,39 @@ button {
     scroll-behavior: auto;
   }
 }
+
+@keyframes clients-scroll {
+    from {
+        transform: translateX(0);
+    }
+
+    to {
+        transform: translateX(-50%);
+    }
+}
+
+@keyframes clients-scroll-reverse {
+    from {
+        transform: translateX(-50%);
+    }
+
+    to {
+        transform: translateX(0);
+    }
+}
+
+.animate-clients {
+    animation: clients-scroll 32s linear infinite !important;
+}
+
+.animate-clients-reverse {
+    animation: clients-scroll-reverse 36s linear infinite !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .animate-clients,
+    .animate-clients-reverse {
+        animation: none;
+        transform: translateX(0);
+    }
+}

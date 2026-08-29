@@ -6,7 +6,7 @@ export interface Service {
     description: string;
     image: string;
     featured?: boolean;
-}
+};
 
 export type GalleryItem = {
     id: string;
@@ -16,4 +16,10 @@ export type GalleryItem = {
     height: number;
     type?: "image" | "video";
     featured?: boolean;
+};
+
+export type ClientLogo = {
+    id: string;
+    name: string;
+    logo: string;
 };
