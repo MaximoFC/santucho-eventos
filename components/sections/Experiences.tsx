@@ -36,7 +36,7 @@ function ExperienceCard({
         index % 2 === 1 ? "lg:translate-y-16" : "",
       ].join(" ")}
     >
-      <div className="relative aspect-[4/5] overflow-hidden sm:aspect-[5/6] lg:aspect-[4/5]">
+      <div className="relative aspect-[4/5] overflow-hidden sm:aspect-[4/5] lg:aspect-[3/4]">
         <Image
           src={experience.image}
           alt={`Experiencia de Santucho Eventos: ${experience.title.replace(
@@ -52,7 +52,7 @@ function ExperienceCard({
         />
 
         {/* Darkening */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-black/5" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/55 to-black/5" />
 
         {/* Subtle hover overlay */}
         <div className="absolute inset-0 bg-white/[0.03] opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
@@ -69,13 +69,13 @@ function ExperienceCard({
         </div>
 
         {/* Bottom content */}
-        <div className="absolute inset-x-0 bottom-0 p-5 sm:p-7 lg:p-8">
-          <div className="max-w-md">
-            <h3 className="whitespace-pre-line text-[2.35rem] font-semibold uppercase leading-[0.86] tracking-[-0.065em] text-white sm:text-5xl">
+        <div className="absolute inset-x-0 bottom-0 p-5 sm:p-6 lg:p-7 xl:p-8">
+          <div className="max-w-lg">
+            <h3 className="whitespace-pre-line text-[2.35rem] font-semibold uppercase leading-[0.86] tracking-[-0.065em] text-white sm:text-[2.35rem] lg:text-[2.35rem] xl:text-[2.4rem]">
               {experience.title}
             </h3>
 
-            <p className="mt-5 max-w-sm text-sm leading-relaxed text-white/60 sm:text-[15px]">
+            <p className="mt-6 max-w-sm text-sm leading-relaxed text-white/60 sm:text-[15px]">
               {experience.description}
             </p>
           </div>

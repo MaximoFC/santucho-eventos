@@ -3,21 +3,6 @@
 import { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 
-/*
- * -------------------------------------------------------------
- * Genera la CARA de la tarjeta como una textura de canvas.
- *
- * El Lanyard original de reactbits usa un modelo .glb hecho en
- * Blender con la textura ya "horneada". Nosotros no tenemos ese
- * modelo, así que reconstruimos el mismo resultado dibujando el
- * diseño de <SantuchoCard /> directamente en un <canvas> 2D y
- * usándolo como CanvasTexture sobre una caja 3D (RoundedBox).
- *
- * Ventaja: podés seguir editando el diseño acá, en CSS-like
- * canvas calls, sin tocar Blender ni exportar modelos.
- * -------------------------------------------------------------
- */
-
 export type CardFaceContent = {
     logoSrc: string;
     eyebrow?: string;
@@ -26,13 +11,12 @@ export type CardFaceContent = {
     captionBottom?: string;
 };
 
-const TEXTURE_WIDTH = 1600;
-const TEXTURE_HEIGHT = 2368; // mantiene el aspect ratio 250:370 del diseño original
+const TEXTURE_WIDTH = 2048;
+const TEXTURE_HEIGHT = 3031;
 
 export function useCardFaceTexture(content: CardFaceContent) {
-    const [texture, setTexture] = useState<THREE.CanvasTexture | null>(
-        null,
-    );
+    const [texture, setTexture] =
+        useState<THREE.CanvasTexture | null>(null);
 
     const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
@@ -50,90 +34,191 @@ export function useCardFaceTexture(content: CardFaceContent) {
 
         const ctx = canvas.getContext("2d");
 
-        if (!ctx) {
-            return;
-        }
+        if (!ctx) return;
+
+        /*
+         * ---------------------------------------------------------
+         * Imagen del logo
+         * ---------------------------------------------------------
+         */
 
         const logo = new Image();
+
         logo.crossOrigin = "anonymous";
         logo.src = content.logoSrc;
 
+        /*
+         * ---------------------------------------------------------
+         * Render de la tarjeta
+         * ---------------------------------------------------------
+         */
+
         const draw = () => {
-            if (cancelled) {
-                return;
-            }
+            if (cancelled) return;
 
             const w = TEXTURE_WIDTH;
             const h = TEXTURE_HEIGHT;
-            const pad = 60;
-            const radius = 68;
+
+            const pad = 140;
+            const radius = 140;
+
+            /*
+             * -----------------------------------------------------
+             * Fondo
+             * -----------------------------------------------------
+             */
 
             ctx.clearRect(0, 0, w, h);
 
-            /* Fondo de la tarjeta */
-            roundRect(ctx, 0, 0, w, h, radius);
+            roundRect(
+                ctx,
+                0,
+                0,
+                w,
+                h,
+                radius,
+            );
+
             ctx.fillStyle = "#0a0a0a";
             ctx.fill();
 
-            /* Borde exterior sutil */
-            ctx.lineWidth = 3;
-            ctx.strokeStyle = "rgba(255,255,255,0.15)";
+            /*
+             * -----------------------------------------------------
+             * Borde exterior
+             * -----------------------------------------------------
+             */
+
+            ctx.lineWidth = 5;
+
+            ctx.strokeStyle =
+                "rgba(255,255,255,0.14)";
+
             ctx.stroke();
 
-            /* Borde interior */
+            /*
+             * -----------------------------------------------------
+             * Borde interior
+             * -----------------------------------------------------
+             */
+
             roundRect(
                 ctx,
                 pad * 0.5,
                 pad * 0.5,
                 w - pad,
                 h - pad,
-                radius * 0.8,
+                radius * 0.82,
             );
-            ctx.lineWidth = 2;
-            ctx.strokeStyle = "rgba(255,255,255,0.06)";
+
+            ctx.lineWidth = 3;
+
+            ctx.strokeStyle =
+                "rgba(255,255,255,0.055)";
+
             ctx.stroke();
 
-            /* Fila superior */
+            /*
+             * -----------------------------------------------------
+             * Metadata superior
+             * -----------------------------------------------------
+             */
+
             ctx.textBaseline = "top";
-            ctx.fillStyle = "rgba(255,255,255,0.35)";
+
+            ctx.fillStyle =
+                "rgba(255,255,255,0.45)";
+
             ctx.font =
-                "600 22px system-ui, -apple-system, sans-serif";
+                "600 84px system-ui, -apple-system, BlinkMacSystemFont, sans-serif";
+
             ctx.textAlign = "left";
+
             drawTracked(
                 ctx,
-                (content.eyebrow ?? "EVENT PRODUCTION").toUpperCase(),
+                (
+                    content.eyebrow ??
+                    "EVENT PRODUCTION"
+                ).toUpperCase(),
                 pad,
                 pad,
-                3,
+                8,
             );
 
-            ctx.fillStyle = "rgba(255,255,255,0.3)";
+            ctx.fillStyle =
+                "rgba(255,255,255,0.4)";
+
             ctx.textAlign = "right";
+
             drawTracked(
                 ctx,
                 content.index ?? "01",
                 w - pad,
                 pad,
-                3,
+                8,
                 true,
             );
 
-            /* Logo centrado */
-            const logoW = w * 0.62;
-            const logoH = logoW * (logo.height / logo.width || 0.5);
-            const logoX = (w - logoW) / 2;
-            const logoY = (h - logoH) / 2;
+            /*
+             * -----------------------------------------------------
+             * Logo
+             * -----------------------------------------------------
+             */
 
-            if (logo.complete && logo.naturalWidth > 0) {
-                ctx.drawImage(logo, logoX, logoY, logoW, logoH);
+            if (
+                logo.complete &&
+                logo.naturalWidth > 0 &&
+                logo.naturalHeight > 0
+            ) {
+                const maxLogoWidth = w * 0.44;
+                const maxLogoHeight = h * 0.15;
+
+                const ratio =
+                    logo.naturalHeight /
+                    logo.naturalWidth;
+
+                let logoW = maxLogoWidth;
+                let logoH = logoW * ratio;
+
+                if (logoH > maxLogoHeight) {
+                    logoH = maxLogoHeight;
+                    logoW = logoH / ratio;
+                }
+
+                const logoX =
+                    (w - logoW) / 2;
+
+                const logoY =
+                    (h - logoH) / 2;
+
+                ctx.imageSmoothingEnabled = true;
+                ctx.imageSmoothingQuality = "high";
+
+                ctx.drawImage(
+                    logo,
+                    logoX,
+                    logoY,
+                    logoW,
+                    logoH,
+                );
             }
 
-            /* Fila inferior */
-            const bottomY = h - pad - 90;
+            /*
+             * -----------------------------------------------------
+             * Metadata inferior
+             * -----------------------------------------------------
+             */
+
+            const bottomY =
+                h - pad - 260;
 
             ctx.textAlign = "left";
-            ctx.fillStyle = "rgba(255,255,255,0.3)";
-            ctx.font = "500 18px system-ui, sans-serif";
+
+            ctx.fillStyle =
+                "rgba(255,255,255,0.38)";
+
+            ctx.font =
+                "500 68px system-ui, -apple-system, BlinkMacSystemFont, sans-serif";
+
             drawTracked(
                 ctx,
                 (
@@ -142,12 +227,15 @@ export function useCardFaceTexture(content: CardFaceContent) {
                 ).toUpperCase(),
                 pad,
                 bottomY,
-                2,
+                5,
             );
 
-            ctx.fillStyle = "rgba(255,255,255,0.55)";
+            ctx.fillStyle =
+                "rgba(255,255,255,0.72)";
+
             ctx.font =
-                "600 20px system-ui, sans-serif";
+                "700 110px system-ui, -apple-system, BlinkMacSystemFont, sans-serif";
+
             drawTracked(
                 ctx,
                 (
@@ -155,43 +243,142 @@ export function useCardFaceTexture(content: CardFaceContent) {
                     "Tucumán · Argentina"
                 ).toUpperCase(),
                 pad,
-                bottomY + 34,
-                2,
+                bottomY + 95,
+                6,
             );
 
-            /* Botón circular inferior derecho */
-            const circleR = 46;
-            const circleX = w - pad - circleR;
-            const circleY = h - pad - circleR;
+            /*
+             * -----------------------------------------------------
+             * Indicador circular
+             * -----------------------------------------------------
+             */
+
+            const circleR = 130;
+
+            const circleX =
+                w - pad - circleR;
+
+            const circleY =
+                h - pad - circleR;
 
             ctx.beginPath();
-            ctx.arc(circleX, circleY, circleR, 0, Math.PI * 2);
-            ctx.strokeStyle = "rgba(255,255,255,0.18)";
-            ctx.lineWidth = 2.5;
+
+            ctx.arc(
+                circleX,
+                circleY,
+                circleR,
+                0,
+                Math.PI * 2,
+            );
+
+            ctx.strokeStyle =
+                "rgba(255,255,255,0.18)";
+
+            ctx.lineWidth = 5;
+
             ctx.stroke();
 
-            ctx.fillStyle = "rgba(255,255,255,0.65)";
-            ctx.font = "300 40px system-ui, sans-serif";
+            ctx.fillStyle =
+                "rgba(255,255,255,0.68)";
+
+            ctx.font =
+                "300 104px system-ui, sans-serif";
+
             ctx.textAlign = "center";
             ctx.textBaseline = "middle";
-            ctx.fillText("↗", circleX + 1, circleY - 2);
 
-            /* Brillo diagonal sutil */
-            const sheen = ctx.createLinearGradient(0, 0, w, h);
-            sheen.addColorStop(0, "rgba(255,255,255,0.07)");
-            sheen.addColorStop(0.4, "rgba(255,255,255,0.0)");
+            ctx.fillText(
+                "↗",
+                circleX + 4,
+                circleY - 5,
+            );
+
+            /*
+             * -----------------------------------------------------
+             * Sheen
+             * -----------------------------------------------------
+             */
+
+            const sheen =
+                ctx.createLinearGradient(
+                    0,
+                    0,
+                    w,
+                    h,
+                );
+
+            sheen.addColorStop(
+                0,
+                "rgba(255,255,255,0.075)",
+            );
+
+            sheen.addColorStop(
+                0.35,
+                "rgba(255,255,255,0)",
+            );
+
+            sheen.addColorStop(
+                0.75,
+                "rgba(255,255,255,0)",
+            );
+
+            sheen.addColorStop(
+                1,
+                "rgba(255,255,255,0.025)",
+            );
+
             ctx.fillStyle = sheen;
-            roundRect(ctx, 0, 0, w, h, radius);
+
+            roundRect(
+                ctx,
+                0,
+                0,
+                w,
+                h,
+                radius,
+            );
+
             ctx.fill();
 
-            const tex = new THREE.CanvasTexture(canvas);
-            tex.colorSpace = THREE.SRGBColorSpace;
+            /*
+             * -----------------------------------------------------
+             * Three.js texture
+             * -----------------------------------------------------
+             */
+
+            const tex =
+                new THREE.CanvasTexture(canvas);
+
+            tex.colorSpace =
+                THREE.SRGBColorSpace;
+
+            tex.minFilter =
+                THREE.LinearMipmapLinearFilter;
+
+            tex.magFilter =
+                THREE.LinearFilter;
+
+            tex.generateMipmaps = true;
+
+            tex.anisotropy = 8;
+
             tex.needsUpdate = true;
 
-            setTexture(tex);
+            if (!cancelled) {
+                setTexture(tex);
+            }
         };
 
-        if (logo.complete && logo.naturalWidth > 0) {
+        /*
+         * ---------------------------------------------------------
+         * Esperamos al logo antes de dibujar
+         * ---------------------------------------------------------
+         */
+
+        if (
+            logo.complete &&
+            logo.naturalWidth > 0
+        ) {
             draw();
         } else {
             logo.onload = draw;
@@ -201,7 +388,6 @@ export function useCardFaceTexture(content: CardFaceContent) {
         return () => {
             cancelled = true;
         };
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [
         content.logoSrc,
         content.eyebrow,
@@ -213,6 +399,12 @@ export function useCardFaceTexture(content: CardFaceContent) {
     return texture;
 }
 
+/*
+ * -------------------------------------------------------------
+ * Rounded rectangle
+ * -------------------------------------------------------------
+ */
+
 function roundRect(
     ctx: CanvasRenderingContext2D,
     x: number,
@@ -222,15 +414,50 @@ function roundRect(
     r: number,
 ) {
     ctx.beginPath();
+
     ctx.moveTo(x + r, y);
-    ctx.arcTo(x + w, y, x + w, y + h, r);
-    ctx.arcTo(x + w, y + h, x, y + h, r);
-    ctx.arcTo(x, y + h, x, y, r);
-    ctx.arcTo(x, y, x + w, y, r);
+
+    ctx.arcTo(
+        x + w,
+        y,
+        x + w,
+        y + h,
+        r,
+    );
+
+    ctx.arcTo(
+        x + w,
+        y + h,
+        x,
+        y + h,
+        r,
+    );
+
+    ctx.arcTo(
+        x,
+        y + h,
+        x,
+        y,
+        r,
+    );
+
+    ctx.arcTo(
+        x,
+        y,
+        x + w,
+        y,
+        r,
+    );
+
     ctx.closePath();
 }
 
-/** Dibuja texto con letter-spacing manual (canvas 2D no lo soporta nativo). */
+/*
+ * -------------------------------------------------------------
+ * Letter spacing manual para Canvas 2D
+ * -------------------------------------------------------------
+ */
+
 function drawTracked(
     ctx: CanvasRenderingContext2D,
     text: string,
@@ -240,18 +467,40 @@ function drawTracked(
     rightAlign = false,
 ) {
     const chars = text.split("");
-    const widths = chars.map((c) => ctx.measureText(c).width + spacing);
-    const total = widths.reduce((a, b) => a + b, 0);
 
-    let cursor = rightAlign ? x - total : x;
+    const widths = chars.map(
+        (char) =>
+            ctx.measureText(char).width +
+            spacing,
+    );
 
-    const prevAlign = ctx.textAlign;
+    const total =
+        widths.reduce(
+            (sum, width) =>
+                sum + width,
+            0,
+        );
+
+    let cursor = rightAlign
+        ? x - total
+        : x;
+
+    const previousAlign =
+        ctx.textAlign;
+
     ctx.textAlign = "left";
 
-    chars.forEach((c, i) => {
-        ctx.fillText(c, cursor, y);
-        cursor += widths[i];
-    });
+    chars.forEach(
+        (char, index) => {
+            ctx.fillText(
+                char,
+                cursor,
+                y,
+            );
 
-    ctx.textAlign = prevAlign;
+            cursor += widths[index];
+        },
+    );
+
+    ctx.textAlign = previousAlign;
 }
