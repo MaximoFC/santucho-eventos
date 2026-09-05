@@ -1,40 +1,34 @@
 export type GalleryItem = {
-    id: number;
+    id: string;
     src: string;
     alt: string;
-    featured?: boolean;
+    layout: string;
 };
 
 export const GALLERY: GalleryItem[] = [
     {
-        id: 1,
-        src: "/images/matinee-preview.JPG",
-        alt: "Producción audiovisual de Santucho Eventos",
-        featured: true,
+        id: "01",
+        src: "/images/positioning.PNG",
+        alt: "Semana estudiantil producida por Santucho Producciones",
+        layout: "col-span-2 row-span-2 lg:col-span-4 lg:row-span-2",
     },
     {
-        id: 2,
-        src: "/images/matinee-preview.JPG",
-        alt: "Evento producido por Santucho Eventos",
+        id: "02",
+        src: "/images/robot-gallery.PNG",
+        alt: "Robot led en fiesta de cumpleaños",
+        layout: "col-span-1 row-span-2 lg:col-span-4 lg:row-span-1",
     },
     {
-        id: 3,
-        src: "/images/matinee-preview.JPG",
-        alt: "Montaje de iluminación para evento",
+        id: "03",
+        src: "/images/15-gallery.jpg",
+        alt: "Fiesta de 15 años animada por Santucho Producciones",
+        layout: "col-span-1 row-span-2 lg:col-span-4 lg:row-span-2",
     },
     {
-        id: 4,
-        src: "/images/matinee-preview.JPG",
-        alt: "Producción técnica de Santucho Eventos",
+        id: "04",
+        src: "/images/15-gallery-2.jpg",
+        alt: "Fiesta de 15 años con efectos especiales de Santucho Producciones",
+        layout: "col-span-1 row-span-2 lg:col-span-4 lg:row-span-1",
     },
-    {
-        id: 5,
-        src: "/images/matinee-preview.JPG",
-        alt: "Experiencia audiovisual producida por Santucho",
-    },
-    {
-        id: 6,
-        src: "/images/matinee-preview.JPG",
-        alt: "Evento con iluminación y pantallas LED",
-    },
+    
 ];

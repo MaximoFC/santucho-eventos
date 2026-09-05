@@ -111,7 +111,7 @@ export const siteConfig = {
       title: "Cada detalle\ncuenta",
       description:
         "Una puesta en escena pensada para que cada momento tenga impacto.",
-      image: "/images/semana-estudiantil-preview.PNG",
+      image: "/images/fiesta-preview.jpg",
       imagePosition: "center 55%",
     },
     {
@@ -120,7 +120,7 @@ export const siteConfig = {
       title: "Cada detalle\ncuenta",
       description:
         "Una puesta en escena pensada para que cada momento tenga impacto.",
-      image: "/images/matinee-preview.JPG",
+      image: "/images/penas-bingos-preview.png",
       imagePosition: "center 55%",
     },
     {
@@ -156,7 +156,7 @@ export const siteConfig = {
         title: "Robot LED",
         description:
             "Una experiencia visual que transforma la pista y convierte cada momento en espectáculo.",
-        image: "/images/matinee-preview.JPG",
+        image: "/images/robot-led-preview.jpg",
         featured: true,
     },
 
@@ -167,18 +167,18 @@ export const siteConfig = {
         title: "Cabina de fotos",
         description:
             "Un espacio pensado para crear recuerdos y sumar una experiencia interactiva al evento.",
-        image: "/images/matinee-preview.JPG",
+        image: "/images/cabina-fotos-preview.PNG",
         featured: true,
     },
 
     {
         slug: "servicio-3",
         number: "03",
-        category: "ENTRETENIMIENTO",
-        title: "Servicio pendiente",
+        category: "AMBIENTACIÓN",
+        title: "Túneles de neón",
         description:
-            "Descripción temporal hasta recibir la información definitiva del cliente.",
-        image: "/images/matinee-preview.JPG",
+            "Un recorrido inmersivo de luces vibrantes que transforma el ambiente.",
+        image: "/images/tuneles-neon-preview.jpg",
         featured: true,
     },
   ]

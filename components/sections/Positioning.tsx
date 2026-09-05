@@ -38,7 +38,7 @@ export function Positioning() {
         className="absolute inset-0 -z-20"
       >
         <Image
-          src="/images/positioning.PNG"
+          src="/images/armado.PNG"
           alt="Público disfrutando de una experiencia producida por Santucho Eventos"
           fill
           sizes="100vw"
