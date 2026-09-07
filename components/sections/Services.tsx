@@ -25,9 +25,9 @@ export function Services() {
                         </p>
 
                         <h2 className="mt-6 max-w-4xl text-[clamp(3.5rem,7vw,7rem)] font-semibold uppercase leading-[0.82] tracking-[-0.075em]">
-                            Todo lo
+                            Todo para crear
                             <br />
-                            que hace que pase.
+                            el momento.
                         </h2>
                     </div>
 

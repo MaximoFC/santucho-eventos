@@ -37,13 +37,13 @@ export function FinalCTA() {
 
                 <div className="relative z-10">
                     <p className="text-xs font-medium uppercase tracking-[0.28em] text-white/40">
-                        Tu próximo evento
+                        Tu próxima experiencia
                     </p>
 
                     <h2 className="mt-6 max-w-5xl text-[clamp(4rem,9vw,9rem)] font-semibold uppercase leading-[0.78] tracking-[-0.08em]">
                         Hagamos
                         <br />
-                        que pase.
+                        tu evento.
                     </h2>
 
                     <p className="mt-8 max-w-xl text-lg leading-relaxed text-white/50">
