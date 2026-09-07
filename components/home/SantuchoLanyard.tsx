@@ -95,6 +95,8 @@ const CARD_REST_CENTER_Y =
     ROPE_TOTAL_LENGTH -
     CARD_HEIGHT / 2;
 
+const CAMERA_VERTICAL_LIFT = 0.95;    
+
 /*
  * -------------------------------------------------------------
  * Breakpoint mobile
@@ -348,7 +350,7 @@ function Band({
     useEffect(() => {
         camera.lookAt(
             0,
-            CARD_REST_CENTER_Y,
+            CARD_REST_CENTER_Y - CAMERA_VERTICAL_LIFT,
             0,
         );
     }, [camera]);
@@ -809,11 +811,7 @@ function Band({
              */}
 
             <RigidBody
-                position={[
-                    0.06,
-                    ANCHOR_Y,
-                    0,
-                ]}
+                position={[0.002, ANCHOR_Y, 0]}
                 ref={j1}
                 angularDamping={9}
                 linearDamping={4.5}
@@ -834,11 +832,7 @@ function Band({
              */}
 
             <RigidBody
-                position={[
-                    0.12,
-                    ANCHOR_Y,
-                    0,
-                ]}
+                position={[0.004, ANCHOR_Y, 0]}
                 ref={j2}
                 angularDamping={9}
                 linearDamping={4.5}
@@ -859,11 +853,7 @@ function Band({
              */}
 
             <RigidBody
-                position={[
-                    0.18,
-                    ANCHOR_Y,
-                    0,
-                ]}
+                position={[0.006, ANCHOR_Y, 0]}
                 ref={j3}
                 angularDamping={9}
                 linearDamping={4.5}
@@ -884,11 +874,7 @@ function Band({
              */}
 
             <RigidBody
-                position={[
-                    0.24,
-                    ANCHOR_Y,
-                    0,
-                ]}
+                position={[0.008, ANCHOR_Y, 0]}
                 ref={j4}
                 angularDamping={9}
                 linearDamping={4.5}
@@ -909,11 +895,7 @@ function Band({
              */}
 
             <RigidBody
-                position={[
-                    0.3,
-                    ANCHOR_Y,
-                    0,
-                ]}
+                position={[0.01, ANCHOR_Y, 0]}
                 ref={j5}
                 angularDamping={9}
                 linearDamping={4.5}
@@ -940,11 +922,7 @@ function Band({
                         ? "kinematicPosition"
                         : "dynamic"
                 }
-                position={[
-                    0.4,
-                    2.5,
-                    0,
-                ]}
+                position={[0.012, 2.5, 0]}
                 angularDamping={6.5}
                 linearDamping={3.5}
                 canSleep={true}
