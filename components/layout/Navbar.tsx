@@ -28,20 +28,30 @@ export function Navbar() {
         className="border-b"
       >
         <div className="mx-auto flex h-20 max-w-[1600px] items-center justify-between px-6 lg:px-10">
-          <AnimatePresence initial={false}>
-            {scrolled ? (
-              <motion.div
-                key="navbar-logo"
-                layoutId="santucho-brand"
-                transition={{ type: "spring", stiffness: 280, damping: 28 }}
-                className="w-[150px] sm:w-[170px]"
-              >
-                <BrandLogo />
-              </motion.div>
-            ) : (
-              <div aria-hidden="true" className="w-[150px] opacity-0 sm:w-[170px]" />
-            )}
-          </AnimatePresence>
+          <div className="relative aspect-[420/180] w-[150px] sm:w-[170px]">
+            <div
+              aria-hidden="true"
+              className="pointer-events-none absolute inset-0 opacity-0"
+            >
+              <BrandLogo priority />
+            </div>
+
+            <AnimatePresence initial={false}>
+              {scrolled && (
+                <motion.div
+                  key="navbar-logo"
+                  layoutId="santucho-brand"
+                  transition={{
+                    layout: { type: "spring", stiffness: 280, damping: 28 },
+                    opacity: { duration: 0.15, ease: "easeOut" },
+                  }}
+                  className="absolute inset-0"
+                >
+                  <BrandLogo />
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
 
           <nav aria-label="Navegación principal" className="hidden items-center gap-8 md:flex">
             {siteConfig.navigation.map((item) => (
