@@ -75,7 +75,7 @@ export function FinalCTA() {
 
                 <div className="relative mt-10 h-[520px] lg:mt-0 lg:h-[620px]">
                     <SantuchoLanyard
-                        logoSrc="/logo-black.png"
+                        logoSrc="/brand/logo-black.png"
                         eyebrow="Event production"
                         index="01"
                         captionTop="Experiencias que se recuerdan"

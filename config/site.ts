@@ -102,7 +102,7 @@ export const siteConfig = {
       title: "Eventos\nque se sienten",
       description:
         "Producción audiovisual para eventos universitarios, recitales, shows y celebraciones de gran escala.",
-      image: "/images/semana-estudiantil-preview.PNG",
+      image: "/images/experiences/semana-estudiantil-preview.PNG",
       imagePosition: "center 35%",
     },
     {
@@ -111,7 +111,7 @@ export const siteConfig = {
       title: "Cada momento\nimporta",
       description:
         "Una puesta en escena pensada para celebraciones, cumpleaños, fiestas de 15, casamientos y eventos privados.",
-      image: "/images/fiesta-preview.jpg",
+      image: "/images/experiences/fiesta-preview.jpg",
       imagePosition: "center 55%",
     },
     {
@@ -120,7 +120,7 @@ export const siteConfig = {
       title: "La energía\nse comparte",
       description:
         "Sonido, iluminación y producción audiovisual para acompañar cada momento del evento.",
-      image: "/images/penas-bingos-preview.png",
+      image: "/images/experiences/penas-bingos-preview.png",
       imagePosition: "center 55%",
     },
     {
@@ -129,7 +129,7 @@ export const siteConfig = {
       title: "Una noche\npara recordar",
       description:
         "Una producción pensada para crear una experiencia audiovisual atractiva y adaptada a cada celebración.",
-      image: "/images/matinee-preview.JPG",
+      image: "/images/experiences/matinee-preview.JPG",
       imagePosition: "center 55%",
     },
   ],

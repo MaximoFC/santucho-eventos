@@ -43,7 +43,7 @@ export const services: Service[] = [
         title: "Cabina de fotos",
         description:
             "Nuestra cabina de fotos ofrece impresiones instantáneas, accesorios temáticos y recuerdos únicos para que cada invitado se lleve una sonrisa.",
-        image: "/images/cabina-fotos-preview.PNG",
+        image: "/images/services/cabina-fotos-preview.PNG",
         variants: ["Cantidad de horas"],
         featured: true,
     },
@@ -88,7 +88,7 @@ export const services: Service[] = [
         title: "Ambientación",
         description:
             "Creamos ambientes que reflejan el estilo y la esencia de cada evento, combinando iluminación, decoración y detalles visuales.",
-        image: "",
+        image: "/images/services/tuneles-neon-preview.jpg",
         variants: [
             "Chispas frías",
             "Túnel irregular",
@@ -107,7 +107,7 @@ export const services: Service[] = [
         title: "Entretenimiento",
         description:
             "Ofrecemos propuestas de entretenimiento para todas las edades, pensadas para sorprender y mantener a los invitados disfrutando durante todo el evento.",
-        image: "",
+        image: "/images/services/robot-led-preview.jpg",
         variants: [
             "Robots LED",
             "Alas de neón",
