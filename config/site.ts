@@ -2,7 +2,7 @@ export const siteConfig = {
   name: "Santucho Eventos",
   shortName: "Santucho",
   description:
-    "Soluciones audiovisuales profesionales para crear experiencias inolvidables.",
+    "Soluciones audiovisuales profesionales para hacer de cada evento una experiencia inolvidable.",
   location: "Tucumán, Argentina",
   founded: 2020,
 
@@ -32,7 +32,7 @@ export const siteConfig = {
     titleAccent: "EVENTOS",
 
     description:
-      "Sonido, iluminación, pantallas LED, estructuras y asistencia técnica profesional.",
+      "Sonido, iluminación, pantallas LED, proyección, estructuras y asistencia técnica profesional.",
 
     primaryCta: "Solicitar presupuesto",
     secondaryCta: "Ver servicios",
@@ -56,41 +56,41 @@ export const siteConfig = {
   experienceIntro: {
     eyebrow: 'Lo que hacemos',
     title: 'Experiencias que\nse viven.',
-    description: 'Desde una primera idea hasta el último aplauso, nos ocupamos de cada detalle para que tu evento tenga identidad propia.',
+    description: 'Trabajamos en cumpleaños, fiestas de 15, casamientos, eventos corporativos, recitales, festivales y celebraciones de todo tipo.',
   },
 
   positioning: {
     eyebrow: 'Más que un evento',
     title: 'Una experiencia.',
-    description: 'No solo alquilamos equipos. Combinamos tecnología, experiencia y atención personalizada para que cada evento suceda exactamente como lo imaginaste.',
+    description: 'No solo alquilamos equipos: combinamos tecnología, atención personalizada y un equipo técnico comprometido para que cada evento salga exactamente como lo imaginaste.',
     concepts: [
       {
         id: "tecnologia",
         number: "01",
         title: "Tecnología",
         description:
-          "Equipamiento audiovisual profesional para lograr una puesta en escena de alto nivel.",
+          "Equipos audiovisuales de calidad para lograr una puesta en escena profesional.",
       },
       {
         id: "produccion",
         number: "02",
         title: "Producción",
         description:
-          "Planificamos cada detalle para que imagen, sonido e iluminación funcionen en conjunto.",
+          "Combinamos sonido, iluminación, imagen, estructuras y asistencia técnica según las necesidades de cada evento.",
       },
       {
         id: "atencion",
         number: "03",
         title: "Atención",
         description:
-          "Acompañamiento personalizado desde la planificación hasta el final del evento.",
+          "Atención personalizada para acompañarte en la planificación y encontrar la propuesta adecuada para tu evento.",
       },
       {
         id: "compromiso",
         number: "04",
         title: "Compromiso",
         description:
-          "Un equipo técnico presente y preparado para que todo salga como fue pensado.",
+          "Un equipo técnico comprometido para que todo funcione correctamente y sin preocupaciones.",
       },
     ],
   },
@@ -101,34 +101,34 @@ export const siteConfig = {
       category: "SEMANA ESTUDIANTIL",
       title: "Eventos\nque se sienten",
       description:
-        "Producción audiovisual para recitales, shows y eventos de gran escala.",
+        "Producción audiovisual para eventos universitarios, recitales, shows y celebraciones de gran escala.",
       image: "/images/semana-estudiantil-preview.PNG",
       imagePosition: "center 35%",
     },
     {
       number: "02",
       category: "FIESTAS",
-      title: "Cada detalle\ncuenta",
+      title: "Cada momento\nimporta",
       description:
-        "Una puesta en escena pensada para que cada momento tenga impacto.",
+        "Una puesta en escena pensada para celebraciones, cumpleaños, fiestas de 15, casamientos y eventos privados.",
       image: "/images/fiesta-preview.jpg",
       imagePosition: "center 55%",
     },
     {
       number: "03",
       category: "PEÑAS Y BINGOS",
-      title: "Cada detalle\ncuenta",
+      title: "La energía\nse comparte",
       description:
-        "Una puesta en escena pensada para que cada momento tenga impacto.",
+        "Sonido, iluminación y producción audiovisual para acompañar cada momento del evento.",
       image: "/images/penas-bingos-preview.png",
       imagePosition: "center 55%",
     },
     {
       number: "04",
       category: "MATINÉES",
-      title: "Cada detalle\ncuenta",
+      title: "Una noche\npara recordar",
       description:
-        "Una puesta en escena pensada para que cada momento tenga impacto.",
+        "Una producción pensada para crear una experiencia audiovisual atractiva y adaptada a cada celebración.",
       image: "/images/matinee-preview.JPG",
       imagePosition: "center 55%",
     },
@@ -147,41 +147,7 @@ export const siteConfig = {
       { label: 'facebook', href: 'https://facebook.com' },
     ]
   },
-
-  services: [
-    {
-        slug: "robot-led",
-        number: "01",
-        category: "ENTRETENIMIENTO",
-        title: "Robot LED",
-        description:
-            "Una experiencia visual que transforma la pista y convierte cada momento en espectáculo.",
-        image: "/images/robot-led-preview.jpg",
-        featured: true,
-    },
-
-    {
-        slug: "cabina-de-fotos",
-        number: "02",
-        category: "EXPERIENCIAS",
-        title: "Cabina de fotos",
-        description:
-            "Un espacio pensado para crear recuerdos y sumar una experiencia interactiva al evento.",
-        image: "/images/cabina-fotos-preview.PNG",
-        featured: true,
-    },
-
-    {
-        slug: "servicio-3",
-        number: "03",
-        category: "AMBIENTACIÓN",
-        title: "Túneles de neón",
-        description:
-            "Un recorrido inmersivo de luces vibrantes que transforma el ambiente.",
-        image: "/images/tuneles-neon-preview.jpg",
-        featured: true,
-    },
-  ]
+  
 } as const;
 
 export type Experience = (typeof siteConfig.experiences)[number]

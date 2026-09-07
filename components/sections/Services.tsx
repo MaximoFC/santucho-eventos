@@ -4,10 +4,10 @@ import Image from "next/image";
 import Link from "next/link";
 import { motion } from "motion/react";
 
-import { siteConfig } from "@/config/site";
+import { services } from "@/data/services";
 
 export function Services() {
-    const featuredServices = siteConfig.services.filter(
+    const featuredServices = services.filter(
         (service) => service.featured,
     );
 

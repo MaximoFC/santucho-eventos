@@ -76,6 +76,65 @@ const CARD_WIDTH = 2.0;
 const CARD_HEIGHT = 2.95;
 const CARD_DEPTH = 0.07;
 
+const ANCHOR_Y = 5.3;
+const ROPE_SEGMENT_LENGTH = 0.6;
+const ROPE_SEGMENT_COUNT = 5;
+const ROPE_TOTAL_LENGTH =
+    ROPE_SEGMENT_LENGTH *
+    ROPE_SEGMENT_COUNT;
+
+/*
+ * Centro vertical real donde queda la tarjeta
+ * en reposo (colgando derecha bajo el
+ * anclaje). Usamos esto como punto de mira
+ * de la cámara para que quede centrada sin
+ * importar el tamaño de pantalla.
+ */
+const CARD_REST_CENTER_Y =
+    ANCHOR_Y -
+    ROPE_TOTAL_LENGTH -
+    CARD_HEIGHT / 2;
+
+/*
+ * -------------------------------------------------------------
+ * Breakpoint mobile
+ * -------------------------------------------------------------
+ */
+
+function useIsMobile(
+    breakpointPx = 1024,
+) {
+    const [isMobile, setIsMobile] =
+        useState(false);
+
+    useEffect(() => {
+        const mql =
+            window.matchMedia(
+                `(max-width: ${
+                    breakpointPx - 1
+                }px)`,
+            );
+
+        const update = () =>
+            setIsMobile(mql.matches);
+
+        update();
+
+        mql.addEventListener(
+            "change",
+            update,
+        );
+
+        return () =>
+            mql.removeEventListener(
+                "change",
+                update,
+            );
+    }, [breakpointPx]);
+
+    return isMobile;
+}
+
 export type SantuchoLanyardProps = {
     logoSrc?: string;
     eyebrow?: string;
@@ -93,8 +152,53 @@ export function SantuchoLanyard({
     captionBottom = "Tucumán · Argentina",
     className,
 }: SantuchoLanyardProps) {
+    const containerRef =
+        useRef<HTMLDivElement>(null);
+
+    const [inView, setInView] =
+        useState(false);
+
+    const isMobile = useIsMobile();
+
+    /*
+     * -----------------------------------------------------
+     * Sólo "cae" cuando la sección es visible
+     * -----------------------------------------------------
+     */
+
+    useEffect(() => {
+        const el =
+            containerRef.current;
+
+        if (!el) return;
+
+        const observer =
+            new IntersectionObserver(
+                ([entry]) => {
+                    if (
+                        entry.isIntersecting
+                    ) {
+                        setInView(
+                            true,
+                        );
+
+                        observer.disconnect();
+                    }
+                },
+                {
+                    threshold: 0.2,
+                },
+            );
+
+        observer.observe(el);
+
+        return () =>
+            observer.disconnect();
+    }, []);
+
     return (
         <div
+            ref={containerRef}
             className={`relative h-full w-full ${
                 className ?? ""
             }`}
@@ -121,6 +225,7 @@ export function SantuchoLanyard({
                     gravity={[0, -25, 0]}
                     interpolate
                     timeStep={1 / 60}
+                    paused={!inView}
                 >
                     <Band
                         logoSrc={logoSrc}
@@ -128,6 +233,7 @@ export function SantuchoLanyard({
                         index={index}
                         captionTop={captionTop}
                         captionBottom={captionBottom}
+                        isMobile={isMobile}
                     />
                 </Physics>
 
@@ -189,6 +295,7 @@ function Band({
     index,
     captionTop,
     captionBottom,
+    isMobile,
 }: Required<
     Omit<
         SantuchoLanyardProps,
@@ -196,6 +303,7 @@ function Band({
     >
 > & {
     logoSrc: string;
+    isMobile: boolean;
 }) {
     const band =
         useRef<
@@ -233,6 +341,18 @@ function Band({
         (state) => state.size,
     );
 
+    const camera = useThree(
+        (state) => state.camera,
+    );
+
+    useEffect(() => {
+        camera.lookAt(
+            0,
+            CARD_REST_CENTER_Y,
+            0,
+        );
+    }, [camera]);
+
     /*
      * ---------------------------------------------------------
      * Objetos reutilizados
@@ -257,6 +377,11 @@ function Band({
         ).current;
 
     const dir =
+        useRef(
+            new THREE.Vector3(),
+        ).current;
+
+    const center =
         useRef(
             new THREE.Vector3(),
         ).current;
@@ -296,7 +421,7 @@ function Band({
         [
             [0, 0, 0],
             [0, 0, 0],
-            0.6,
+            ROPE_SEGMENT_LENGTH,
         ],
     );
 
@@ -306,7 +431,7 @@ function Band({
         [
             [0, 0, 0],
             [0, 0, 0],
-            0.6,
+            ROPE_SEGMENT_LENGTH,
         ],
     );
 
@@ -316,7 +441,7 @@ function Band({
         [
             [0, 0, 0],
             [0, 0, 0],
-            0.6,
+            ROPE_SEGMENT_LENGTH,
         ],
     );
 
@@ -326,7 +451,7 @@ function Band({
         [
             [0, 0, 0],
             [0, 0, 0],
-            0.6,
+            ROPE_SEGMENT_LENGTH,
         ],
     );
 
@@ -336,7 +461,7 @@ function Band({
         [
             [0, 0, 0],
             [0, 0, 0],
-            0.6,
+            ROPE_SEGMENT_LENGTH,
         ],
     );
 
@@ -387,38 +512,121 @@ function Band({
             dragged &&
             card.current
         ) {
+            const camera =
+                state.camera as THREE.PerspectiveCamera;
+
+            /*
+             * -------------------------------------------------
+             * Punto bajo el cursor
+             * -------------------------------------------------
+             */
+
             vec
                 .set(
                     state.pointer.x,
                     state.pointer.y,
                     0.5,
                 )
-                .unproject(
-                    state.camera,
-                );
+                .unproject(camera);
 
             dir
                 .copy(vec)
                 .sub(
-                    state.camera.position,
+                    camera.position,
                 )
                 .normalize();
 
             vec.add(
                 dir.multiplyScalar(
-                    state.camera.position.length(),
+                    camera.position.length(),
                 ),
             );
 
+            /*
+             * -------------------------------------------------
+             * Centro real de la vista a esa misma
+             * profundidad (contempla la leve
+             * inclinación de la cámara)
+             * -------------------------------------------------
+             */
+
+            center
+                .set(
+                    0,
+                    0,
+                    0.5,
+                )
+                .unproject(camera);
+
+            dir
+                .copy(center)
+                .sub(
+                    camera.position,
+                )
+                .normalize();
+
+            center.add(
+                dir.multiplyScalar(
+                    camera.position.length(),
+                ),
+            );
+
+            /*
+             * -------------------------------------------------
+             * Límites visibles a esa profundidad, dejando
+             * lugar para que la tarjeta entera quede
+             * siempre dentro de cámara
+             * -------------------------------------------------
+             */
+
+            const dragDistance =
+                camera.position.distanceTo(
+                    center,
+                );
+
+            const halfHeight =
+                Math.tan(
+                    THREE.MathUtils.degToRad(
+                        camera.fov,
+                    ) / 2,
+                ) * dragDistance;
+
+            const halfWidth =
+                halfHeight *
+                camera.aspect;
+
+            const maxX = Math.max(
+                0,
+                halfWidth -
+                    CARD_WIDTH / 2,
+            );
+
+            const maxY = Math.max(
+                0,
+                halfHeight -
+                    CARD_HEIGHT / 2,
+            );
+
+            const targetX =
+                THREE.MathUtils.clamp(
+                    vec.x -
+                        dragged.x,
+                    center.x - maxX,
+                    center.x + maxX,
+                );
+
+            const targetY =
+                THREE.MathUtils.clamp(
+                    vec.y -
+                        dragged.y,
+                    center.y - maxY,
+                    center.y + maxY,
+                );
+
             card.current.setNextKinematicTranslation(
                 {
-                    x:
-                        vec.x -
-                        dragged.x,
-
-                    y:
-                        vec.y -
-                        dragged.y,
+                    x: targetX,
+                    y: targetY,
 
                     z:
                         vec.z -
@@ -589,7 +797,7 @@ function Band({
                 type="fixed"
                 position={[
                     0,
-                    4.7,
+                    ANCHOR_Y,
                     0,
                 ]}
             />
@@ -603,7 +811,7 @@ function Band({
             <RigidBody
                 position={[
                     0.06,
-                    4.7,
+                    ANCHOR_Y,
                     0,
                 ]}
                 ref={j1}
@@ -628,7 +836,7 @@ function Band({
             <RigidBody
                 position={[
                     0.12,
-                    4.7,
+                    ANCHOR_Y,
                     0,
                 ]}
                 ref={j2}
@@ -653,7 +861,7 @@ function Band({
             <RigidBody
                 position={[
                     0.18,
-                    4.7,
+                    ANCHOR_Y,
                     0,
                 ]}
                 ref={j3}
@@ -678,7 +886,7 @@ function Band({
             <RigidBody
                 position={[
                     0.24,
-                    4.7,
+                    ANCHOR_Y,
                     0,
                 ]}
                 ref={j4}
@@ -703,7 +911,7 @@ function Band({
             <RigidBody
                 position={[
                     0.3,
-                    4.7,
+                    ANCHOR_Y,
                     0,
                 ]}
                 ref={j5}
@@ -754,34 +962,44 @@ function Band({
                 />
 
                 <group
-                    onPointerUp={(event) => {
-                        (
-                            event.target as Element
-                        ).releasePointerCapture?.(
-                            event.pointerId,
-                        );
+                    onPointerUp={
+                        isMobile
+                            ? undefined
+                            : (event) => {
+                                  (
+                                      event.target as Element
+                                  ).releasePointerCapture?.(
+                                      event.pointerId,
+                                  );
 
-                        setDragged(false);
-                    }}
-                    onPointerDown={(event) => {
-                        (
-                            event.target as Element
-                        ).setPointerCapture?.(
-                            event.pointerId,
-                        );
+                                  setDragged(
+                                      false,
+                                  );
+                              }
+                    }
+                    onPointerDown={
+                        isMobile
+                            ? undefined
+                            : (event) => {
+                                  (
+                                      event.target as Element
+                                  ).setPointerCapture?.(
+                                      event.pointerId,
+                                  );
 
-                        setDragged(
-                            new THREE.Vector3()
-                                .copy(
-                                    event.point as THREE.Vector3,
-                                )
-                                .sub(
-                                    vec.copy(
-                                        card.current.translation() as unknown as THREE.Vector3,
-                                    ),
-                                ),
-                        );
-                    }}
+                                  setDragged(
+                                      new THREE.Vector3()
+                                          .copy(
+                                              event.point as THREE.Vector3,
+                                          )
+                                          .sub(
+                                              vec.copy(
+                                                  card.current.translation() as unknown as THREE.Vector3,
+                                              ),
+                                          ),
+                                  );
+                              }
+                    }
                 >
                     <CardFace
                         logoSrc={logoSrc}
