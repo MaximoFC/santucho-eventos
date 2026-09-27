@@ -1,7 +1,9 @@
 "use client";
 
-import Link from "next/link";
 import dynamic from "next/dynamic";
+
+import { AnchorLink } from "@/components/ui/AnchorLink";
+import { whatsappHref } from "@/lib/whatsapp";
 
 const SantuchoLanyard = dynamic(
     () =>
@@ -51,8 +53,8 @@ export function FinalCTA() {
                     </p>
 
                     <div className="mt-10">
-                        <Link
-                            href="#"
+                        <AnchorLink
+                            href={whatsappHref()}
                             className="group inline-flex items-center gap-4 rounded-full bg-white px-7 py-4 text-sm font-medium text-black transition-transform duration-300 hover:scale-[1.03]"
                         >
                             Hablar por WhatsApp
@@ -63,7 +65,7 @@ export function FinalCTA() {
                             >
                                 →
                             </span>
-                        </Link>
+                        </AnchorLink>
                     </div>
                 </div>
 
@@ -73,12 +75,13 @@ export function FinalCTA() {
                  * -------------------------------------------------
                  */}
 
-                <div className="relative mt-10 h-[520px] lg:mt-0 lg:h-[620px]">
+                {/* Decorativo: no aporta contenido a lectores de pantalla ni al teclado */}
+                <div aria-hidden="true" className="relative mt-10 h-[520px] lg:mt-0 lg:h-[620px]">
                     <SantuchoLanyard
                         logoSrc="/brand/logo-black.png"
-                        eyebrow="Event production"
+                        eyebrow="Producción audiovisual"
                         index="01"
-                        captionTop="Experiencias que se recuerdan"
+                        captionTop="Experiencias inolvidables"
                         captionBottom="Tucumán · Argentina"
                     />
                 </div>

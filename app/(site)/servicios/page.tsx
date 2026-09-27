@@ -8,6 +8,7 @@ export const metadata: Metadata = {
     title: "Servicios",
     description:
         "Descubrí los servicios de producción audiovisual, entretenimiento y ambientación de Santucho Eventos para crear una experiencia única.",
+    alternates: { canonical: "/servicios" },
 };
 
 export default function ServicesPage() {
@@ -23,15 +24,14 @@ export default function ServicesPage() {
                         <h1 className="max-w-5xl text-[clamp(4rem,9vw,9rem)] font-semibold uppercase leading-[0.8] tracking-[-0.075em]">
                             Todo para
                             <br />
-                            hacer única
+                            que el evento
                             <br />
-                            tu noche.
+                            suceda.
                         </h1>
 
                         <p className="max-w-xl text-lg leading-relaxed text-white/55 lg:justify-self-end lg:pb-2">
-                            Explorá nuestras propuestas de producción,
-                            entretenimiento y ambientación para encontrar las
-                            experiencias que mejor se adaptan a tu evento.
+                            Producción técnica, ambientación y experiencias pensadas
+                            para adaptar cada evento a su escala, estilo y público.
                         </p>
                     </div>
                 </div>
@@ -51,8 +51,8 @@ export default function ServicesPage() {
                             >
                                 {service.image ? (
                                     <Image
-                                        src={service.image}
-                                        alt={service.title}
+                                        src={service.image.src}
+                                        alt={service.image.alt}
                                         fill
                                         sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                                         className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"

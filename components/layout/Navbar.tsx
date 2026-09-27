@@ -2,14 +2,19 @@
 "use client";
 
 import { AnimatePresence, motion } from "motion/react";
+import { usePathname } from "next/navigation";
 
 import { BrandLogo } from "@/components/ui/BrandLogo";
 import { AnchorLink } from "@/components/ui/AnchorLink";
 import { siteConfig } from "@/config/site";
 import { useSmoothScroll } from "@/providers/SmoothScrollProvider";
+import { whatsappHref } from "@/lib/whatsapp";
 
 export function Navbar() {
   const { scrolled } = useSmoothScroll();
+  // En el Home el logo "viaja" desde el Hero; en el resto de páginas se muestra siempre.
+  const isHome = usePathname() === "/";
+  const showLogo = scrolled || !isHome;
 
   return (
     <motion.header
@@ -20,9 +25,9 @@ export function Navbar() {
     >
       <motion.div
         animate={{
-          backgroundColor: scrolled ? "rgba(5, 5, 5, 0.78)" : "rgba(5, 5, 5, 0)",
-          borderColor: scrolled ? "rgba(255, 255, 255, 0.08)" : "rgba(255, 255, 255, 0)",
-          backdropFilter: scrolled ? "blur(18px)" : "blur(0px)",
+          backgroundColor: showLogo ? "rgba(5, 5, 5, 0.78)" : "rgba(5, 5, 5, 0)",
+          borderColor: showLogo ? "rgba(255, 255, 255, 0.08)" : "rgba(255, 255, 255, 0)",
+          backdropFilter: showLogo ? "blur(18px)" : "blur(0px)",
         }}
         transition={{ duration: 0.4, ease: "easeOut" }}
         className="border-b"
@@ -31,13 +36,14 @@ export function Navbar() {
           <div className="relative aspect-[420/180] w-[150px] sm:w-[170px]">
             <div
               aria-hidden="true"
+              inert
               className="pointer-events-none absolute inset-0 opacity-0"
             >
               <BrandLogo priority />
             </div>
 
             <AnimatePresence initial={false}>
-              {scrolled && (
+              {showLogo && (
                 <motion.div
                   key="navbar-logo"
                   layoutId="santucho-brand"
@@ -53,7 +59,7 @@ export function Navbar() {
             </AnimatePresence>
           </div>
 
-          <nav aria-label="Navegación principal" className="hidden items-center gap-8 md:flex">
+          <nav aria-label="Navegación principal" className="ml-auto mr-8 hidden items-center gap-8 md:flex">
             {siteConfig.navigation.map((item) => (
               <AnchorLink
                 key={item.href}
@@ -64,25 +70,15 @@ export function Navbar() {
               </AnchorLink>
             ))}
 
-            <AnchorLink
-              href="#contacto"
-              className="rounded-full bg-white px-5 py-2.5 text-sm font-medium text-black transition-transform duration-300 hover:scale-[1.03]"
-            >
-              Contacto
-            </AnchorLink>
           </nav>
 
-          <button
-            type="button"
-            aria-label="Abrir menú"
-            className="flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-white/5 md:hidden"
+          {/* Con 3 anclas no hace falta menú: en mobile el único atajo útil es contactar. */}
+          <AnchorLink
+            href={whatsappHref()}
+            className="rounded-full bg-white px-5 py-2.5 text-sm font-medium text-black transition-transform duration-300 hover:scale-[1.03] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#ff1010]"
           >
-            <span className="sr-only">Menú</span>
-            <span className="flex flex-col gap-1.5">
-              <span className="block h-px w-4 bg-white" />
-              <span className="block h-px w-4 bg-white" />
-            </span>
-          </button>
+            Contacto
+          </AnchorLink>
         </div>
       </motion.div>
     </motion.header>

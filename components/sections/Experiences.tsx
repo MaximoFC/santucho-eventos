@@ -1,11 +1,12 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
+import { AnchorLink } from "@/components/ui/AnchorLink";
 import { motion, useScroll, useTransform } from "motion/react";
 import { useRef } from "react";
 
 import { siteConfig } from "@/config/site";
+import { whatsappHref } from "@/lib/whatsapp";
 
 type Experience = (typeof siteConfig.experiences)[number];
 
@@ -36,6 +37,14 @@ function ExperienceCard({
         index % 2 === 1 ? "lg:translate-y-16" : "",
       ].join(" ")}
     >
+      {/* Toda la card abre WhatsApp con el tipo de evento ya escrito */}
+      <AnchorLink
+        href={whatsappHref(
+          `Hola Santucho, quiero consultar por un evento de tipo ${experience.category.toLowerCase()}.`,
+        )}
+        ariaLabel={`Consultar por ${experience.category.toLowerCase()} por WhatsApp`}
+        className="block rounded-[1.75rem] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#ff1010]"
+      >
       <div className="relative aspect-[4/5] overflow-hidden sm:aspect-[4/5] lg:aspect-[3/4]">
         <Image
           src={experience.image}
@@ -80,15 +89,18 @@ function ExperienceCard({
             </p>
           </div>
 
-          {/* Decorative indicator */}
           <div
             aria-hidden="true"
-            className="mt-7 flex h-10 w-10 items-center justify-center rounded-full border border-white/15 text-sm text-white/60 transition-all duration-500 group-hover:border-[#ff1010] group-hover:bg-[#ff1010] group-hover:text-white"
+            className="mt-7 inline-flex items-center gap-3 text-xs font-medium uppercase tracking-[0.18em] text-white/60 transition-colors duration-500 group-hover:text-white"
           >
-            +
+            <span className="flex h-10 w-10 items-center justify-center rounded-full border border-white/15 text-sm transition-all duration-500 group-hover:border-[#ff1010] group-hover:bg-[#ff1010]">
+              ↗
+            </span>
+            Consultar
           </div>
         </div>
       </div>
+      </AnchorLink>
     </motion.article>
   );
 }
@@ -125,8 +137,8 @@ export function Experiences() {
               {siteConfig.experienceIntro.description}
             </p>
 
-            <Link
-              href="#contacto"
+            <AnchorLink
+              href="/#contacto"
               className="group mt-9 inline-flex items-center gap-3 text-xs font-medium uppercase tracking-[0.18em] text-white/65 transition-colors duration-300 hover:text-white"
             >
               <span>Contanos tu idea</span>
@@ -137,7 +149,7 @@ export function Experiences() {
               >
                 →
               </span>
-            </Link>
+            </AnchorLink>
           </div>
 
           {/* EXPERIENCES */}

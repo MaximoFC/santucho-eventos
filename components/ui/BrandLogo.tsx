@@ -24,7 +24,7 @@ export function BrandLogo({
                 alt={siteConfig.logo.alt}
                 width={420}
                 height={180}
-                priority={priority}
+                loading={priority ? "eager" : undefined}
                 className="h-auto w-full object-contain"
             />
         </Link>

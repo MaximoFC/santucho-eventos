@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { SmoothScrollProvider } from "@/providers/SmoothScrollProvider";
+import { siteConfig } from "@/config/site";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -13,38 +14,35 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const title = "Santucho Eventos | Producción de eventos en Tucumán";
+const description =
+  "Sonido, iluminación, pantallas LED, DJ, ambientación y entretenimiento para eventos en Tucumán, Catamarca, Santiago del Estero, Salta y La Rioja.";
+
 export const metadata: Metadata = {
+  metadataBase: new URL(siteConfig.url),
+
   title: {
-    default: "Santucho Eventos | Producción Audiovisual",
+    default: title,
     template: "%s | Santucho Eventos",
   },
 
-  description:
-    "Santucho Eventos ofrece soluciones audiovisuales profesionales para eventos: sonido, iluminación, pantallas LED, estructuras y asistencia técnica.",
-
-  keywords: [
-    "Santucho Eventos",
-    "productora de eventos",
-    "producción audiovisual",
-    "sonido para eventos",
-    "pantallas LED",
-    "iluminación para eventos",
-    "eventos Tucumán",
-  ],
+  description,
 
   openGraph: {
-    title: "Santucho Eventos | Producción Audiovisual",
-    description:
-      "Soluciones audiovisuales profesionales para crear experiencias inolvidables.",
+    title,
+    description,
+    siteName: siteConfig.name,
     type: "website",
     locale: "es_AR",
+    // ponytail: foto del Hero; reemplazar por una pieza 1200x630 con logo cuando exista.
+    images: ["/images/hero-main.PNG"],
   },
 
   twitter: {
     card: "summary_large_image",
-    title: "Santucho Eventos | Producción Audiovisual",
-    description:
-      "Soluciones audiovisuales profesionales para eventos.",
+    title,
+    description,
+    images: ["/images/hero-main.PNG"],
   },
 
   robots: {

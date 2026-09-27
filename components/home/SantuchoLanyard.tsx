@@ -177,18 +177,13 @@ export function SantuchoLanyard({
         const observer =
             new IntersectionObserver(
                 ([entry]) => {
-                    if (
-                        entry.isIntersecting
-                    ) {
-                        setInView(
-                            true,
-                        );
-
-                        observer.disconnect();
-                    }
+                    // Se sigue observando: fuera de pantalla se pausa física + render (GPU en 0).
+                    setInView(
+                        entry.isIntersecting,
+                    );
                 },
                 {
-                    threshold: 0.2,
+                    threshold: 0.1,
                 },
             );
 
@@ -215,6 +210,11 @@ export function SantuchoLanyard({
                     antialias: true,
                 }}
                 dpr={[1, 2]}
+                frameloop={
+                    inView
+                        ? "always"
+                        : "never"
+                }
             >
                 <ambientLight intensity={0.75} />
 
@@ -770,8 +770,9 @@ function Band({
          */
 
         if (
-            angMag > 0.0015 ||
-            Math.abs(yaw) > 0.01
+            !card.current.isSleeping() &&
+            (angMag > 0.02 ||
+                Math.abs(yaw) > 0.03)
         ) {
             card.current.setAngvel(
                 {
@@ -781,7 +782,7 @@ function Band({
                         yaw * 0.15,
                     z: ang.z,
                 },
-                true,
+                false,
             );
         }
     });
@@ -1006,6 +1007,10 @@ function Band({
                     args={[
                         {
                             color: "#242323",
+                            resolution: new THREE.Vector2(
+                                width || 1,
+                                height || 1,
+                            ),
                         },
                     ]}
                     resolution={[

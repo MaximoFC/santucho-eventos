@@ -80,9 +80,10 @@ export function Services() {
                                         }`}
                                     >
                                         {/* Image */}
+                                        {service.image && (
                                         <Image
-                                            src={service.image}
-                                            alt={service.title}
+                                            src={service.image.src}
+                                            alt={service.image.alt}
                                             fill
                                             sizes={
                                                 isFeatured
@@ -91,6 +92,7 @@ export function Services() {
                                             }
                                             className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
                                         />
+                                        )}
 
                                         {/* Overlay */}
                                         <div

@@ -1,5 +1,10 @@
-import Link from "next/link";
 import { siteConfig } from "@/config/site";
+import { AnchorLink } from "@/components/ui/AnchorLink";
+
+const socials = [
+    { label: "Instagram", href: siteConfig.contact.instagram },
+    { label: "Facebook", href: siteConfig.contact.facebook },
+].filter((social) => social.href);
 
 export function Footer() {
     return (
@@ -7,46 +12,51 @@ export function Footer() {
             <div className="mx-auto max-w-[1600px]">
                 <div className="flex flex-col gap-12 lg:flex-row lg:items-end lg:justify-between">
                     <div>
-                        <Link
-                            href="#inicio"
+                        <AnchorLink
+                            href="/#inicio"
                             className="text-2xl font-semibold uppercase tracking-[-0.06em]"
                         >
                             {siteConfig.name}
-                        </Link>
-                        <p className="mt-4 max-w-sm text-sm leading-relaxed text-white/45">{siteConfig.footer.slogan}</p>
+                        </AnchorLink>
+                        <p className="mt-4 max-w-sm text-sm leading-relaxed text-white/45">{siteConfig.description}</p>
+                        <p className="mt-2 max-w-sm text-sm leading-relaxed text-white/45">
+                            {siteConfig.coverage.join(" · ")}
+                        </p>
                     </div>
                     <nav
                         aria-label="Navegación al pie de página"
                         className="grid grid-cols-2 gap-x-12 gap-y-4 text-xs uppercase tracking-[0.18em] text-white/55 sm:flex sm:gap-8"
                     >
-                        {siteConfig.footer.links.map((link) => 
-                            <Link
+                        {siteConfig.footer.links.map((link) =>
+                            <AnchorLink
                                 key={link.href}
                                 href={link.href}
-                                className="transition hover:text-white"
+                                className="py-1 transition hover:text-white"
                             >
                                 {link.label}
-                            </Link>
+                            </AnchorLink>
                         )}
                     </nav>
                 </div>
                 <div
-                    className="mt-14 flex flex-col gap-5 border-t border-white/10 pt-6 text-[10px] uppercase trackin[0.18em] text-white/35 sm:flex-row sm:items-center sm:justify-between"
+                    className="mt-14 flex flex-col gap-5 border-t border-white/10 pt-6 text-[10px] uppercase tracking-[0.18em] text-white/45 sm:flex-row sm:items-center sm:justify-between"
                 >
                     <p>© {new Date().getFullYear()} {siteConfig.name}. Todos los derechos reservados</p>
-                    <div className="flex gap-6">
-                        {siteConfig.footer.socials.map((social) =>
-                            <a
-                                key={social.label}
-                                href={social.href}
-                                target="_blank"
-                                rel="noreferrer"
-                                className="transition hover:text-white"
-                            >
-                                {social.label}
-                            </a>
-                        )}
-                    </div>
+                    {socials.length > 0 && (
+                        <div className="flex gap-6">
+                            {socials.map((social) =>
+                                <a
+                                    key={social.label}
+                                    href={social.href}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="transition hover:text-white"
+                                >
+                                    {social.label}
+                                </a>
+                            )}
+                        </div>
+                    )}
                 </div>
             </div>
         </footer>

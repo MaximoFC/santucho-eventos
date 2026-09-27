@@ -9,7 +9,7 @@ export const GALLERY: GalleryItem[] = [
     {
         id: "01",
         src: "/images/gallery/semana.PNG",
-        alt: "Semana estudiantil producida por Santucho Producciones",
+        alt: "Semana estudiantil producida por Santucho Eventos",
         layout: "col-span-2 row-span-2 lg:col-span-4 lg:row-span-2",
     },
     {
@@ -21,14 +21,14 @@ export const GALLERY: GalleryItem[] = [
     {
         id: "03",
         src: "/images/gallery/15.jpg",
-        alt: "Fiesta de 15 años animada por Santucho Producciones",
+        alt: "Fiesta de 15 años animada por Santucho Eventos",
         layout: "col-span-1 row-span-2 lg:col-span-4 lg:row-span-2",
     },
     {
         id: "04",
-        src: "/images/gallery/15-2.jpg",
-        alt: "Fiesta de 15 años con efectos especiales de Santucho Producciones",
-        layout: "col-span-1 row-span-2 lg:col-span-4 lg:row-span-1",
+        src: "/images/gallery/15-2-opt.jpg",
+        alt: "Fiesta de 15 años con efectos especiales de Santucho Eventos",
+        layout: "col-span-2 row-span-1 lg:col-span-4 lg:row-span-1",
     },
     
 ];

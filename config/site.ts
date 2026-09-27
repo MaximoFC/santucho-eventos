@@ -3,6 +3,8 @@ export const siteConfig = {
   shortName: "Santucho",
   description:
     "Soluciones audiovisuales profesionales para hacer de cada evento una experiencia inolvidable.",
+  // Dominio de producción. Definir NEXT_PUBLIC_SITE_URL en el deploy.
+  url: process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000",
   location: "Tucumán, Argentina",
   founded: 2020,
 
@@ -20,9 +22,11 @@ export const siteConfig = {
   ],
 
   contact: {
-    whatsapp: "",
-    instagram: "",
-    facebook: "",
+    // Solo dígitos, formato internacional: 549 + característica + número (ej: "5493811234567").
+    whatsapp: "5493816719779",
+    whatsappMessage: "Hola Santucho, quiero consultar por un evento.",
+    instagram: "https://www.instagram.com/santucho.producciones/",
+    facebook: "https://www.facebook.com/share/1JTdLxt5pn/",
   },
 
   hero: {
@@ -41,15 +45,15 @@ export const siteConfig = {
   navigation: [
     {
       label: "Servicios",
-      href: "#servicios",
+      href: "/#servicios",
     },
     {
       label: "Eventos",
-      href: "#experiencias",
+      href: "/#experiencias",
     },
     {
       label: "Galería",
-      href: "#galeria",
+      href: "/#momentos",
     },
   ],
 
@@ -98,10 +102,10 @@ export const siteConfig = {
   experiences: [
     {
       number: "01",
-      category: "SEMANA ESTUDIANTIL",
+      category: "EVENTOS UNIVERSITARIOS",
       title: "Eventos\nque se sienten",
       description:
-        "Producción audiovisual para eventos universitarios, recitales, shows y celebraciones de gran escala.",
+        "Producción audiovisual para eventos universitarios, recitales y festivales.",
       image: "/images/experiences/semana-estudiantil-preview.PNG",
       imagePosition: "center 35%",
     },
@@ -110,7 +114,7 @@ export const siteConfig = {
       category: "FIESTAS",
       title: "Cada momento\nimporta",
       description:
-        "Una puesta en escena pensada para celebraciones, cumpleaños, fiestas de 15, casamientos y eventos privados.",
+        "Una puesta en escena pensada para cumpleaños, fiestas de 15, casamientos y celebraciones privadas.",
       image: "/images/experiences/fiesta-preview.jpg",
       imagePosition: "center 55%",
     },
@@ -120,7 +124,7 @@ export const siteConfig = {
       title: "La energía\nse comparte",
       description:
         "Sonido, iluminación y producción audiovisual para acompañar cada momento del evento.",
-      image: "/images/experiences/penas-bingos-preview.png",
+      image: "/images/experiences/penas-bingos-preview.jpg",
       imagePosition: "center 55%",
     },
     {
@@ -135,17 +139,12 @@ export const siteConfig = {
   ],
 
   footer: {
-    slogan: 'Hacemos que pase',
     links: [
-      { label: 'Inicio', href: '#inicio' },
-      { label: 'Servicios', href: '#servicios' },
-      { label: 'Experiencias', href: '#experiencias' },
-      { label: 'Contacto', href: '#contacto' }
+      { label: 'Inicio', href: '/#inicio' },
+      { label: 'Servicios', href: '/servicios' },
+      { label: 'Experiencias', href: '/#experiencias' },
+      { label: 'Contacto', href: '/#contacto' }
     ],
-    socials: [
-      { label: 'Instagram', href: 'https://instagram.com' },
-      { label: 'facebook', href: 'https://facebook.com' },
-    ]
   },
   
 } as const;

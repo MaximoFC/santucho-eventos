@@ -6,11 +6,17 @@
   --brand-red: #ff1010;
 }
 
+/* Geist se cargaba en layout.tsx pero nunca se aplicaba (body usaba Arial). */
+@theme inline {
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
 body {
   margin: 0;
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans), Arial, Helvetica, sans-serif;
 }
 
 ::selection {

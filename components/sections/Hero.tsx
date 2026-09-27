@@ -7,6 +7,7 @@ import { AnimatePresence, motion, useScroll, useSpring, useTransform } from "mot
 import { AnchorLink } from "@/components/ui/AnchorLink";
 import { siteConfig } from "@/config/site";
 import { useSmoothScroll } from "@/providers/SmoothScrollProvider";
+import { whatsappHref } from "@/lib/whatsapp";
 
 export function Hero() {
     const { scrolled } = useSmoothScroll();
@@ -20,7 +21,7 @@ export function Hero() {
     const secondaryImageY = useSpring(rawSecondaryY, { stiffness: 120, damping: 24, mass: 0.4 });
 
     return (
-        <section className="relative min-h-screen overflow-hidden bg-[#050505] text-white">
+        <section id="inicio" className="relative min-h-svh overflow-hidden bg-[#050505] text-white">
             <div
                 aria-hidden="true"
                 className="pointer-events-none absolute -left-40 top-1/4 z-0 h-96 w-96 rounded-full bg-red-500/[0.04] blur-[140px]"
@@ -41,8 +42,8 @@ export function Hero() {
                     src="/images/hero-main.PNG"
                     alt="Artista durante un evento producido por Santucho Eventos"
                     fill
-                    priority
-                    sizes="(max-width: 1024px) 100vw, 60vw"
+                    preload
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 80vw, 60vw"
                     className="object-cover"
                 />
 
@@ -84,7 +85,7 @@ export function Hero() {
                 />
             </motion.div>
 
-            <div className="relative z-30 mx-auto flex min-h-screen max-w-[1600px] flex-col justify-center px-6 pb-16 pt-28 lg:px-10 lg:pb-10 lg:pt-24">
+            <div className="relative z-30 mx-auto flex min-h-svh max-w-[1600px] flex-col justify-center px-6 pb-16 pt-28 lg:px-10 lg:pb-10 lg:pt-24">
                 <div className="max-w-xl lg:max-w-2xl">
                     <motion.div
                         initial={{ opacity: 0, y: 30 }}
@@ -98,7 +99,7 @@ export function Hero() {
 
                     <div className="relative">
                         <div className="invisible" aria-hidden="true">
-                            <h1 className="max-w-4xl text-[clamp(3.5rem,8vw,7.5rem)] font-semibold uppercase leading-[0.78] tracking-[-0.075em]">
+                            <div className="max-w-4xl text-[clamp(3.5rem,8vw,7.5rem)] font-semibold uppercase leading-[0.78] tracking-[-0.075em]">
                                 <span className="block">
                                     {siteConfig.hero.title}
                                 </span>
@@ -106,7 +107,7 @@ export function Hero() {
                                 <span className="block text-white/90">
                                     {siteConfig.hero.titleAccent}
                                 </span>
-                            </h1>
+                            </div>
                         </div>
 
                         <AnimatePresence initial={false}>
@@ -161,7 +162,7 @@ export function Hero() {
 
                         <div className="mt-8 flex flex-col gap-3 sm:flex-row">
                             <AnchorLink
-                                href="#contacto"
+                                href={whatsappHref()}
                                 className="group inline-flex items-center justify-center gap-3 rounded-full bg-white px-6 py-3.5 text-sm font-medium text-black transition-transform duration-300 hover:scale-[1.03]"
                             >
                                 {siteConfig.hero.primaryCta}

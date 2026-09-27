@@ -1,5 +1,3 @@
-"use client";
-
 import Image from "next/image";
 
 import { CLIENTS } from "@/content/clients";
@@ -20,6 +18,8 @@ function LogoRow({
         <div
             className="group relative flex w-max"
             data-direction={reverse ? "reverse" : "forward"}
+            // La 2ª fila repite los mismos logos: solo decorativa para lectores de pantalla.
+            aria-hidden={reverse || undefined}
         >
             <div
                 className={`flex shrink-0 items-center gap-12 pr-12 sm:gap-16 sm:pr-16 lg:gap-24 lg:pr-24 ${
@@ -31,11 +31,13 @@ function LogoRow({
                 {duplicatedClients.map((client, index) => (
                     <div
                         key={`${client.id}-${index}`}
+                        // La mitad duplicada existe solo para el loop infinito.
+                        aria-hidden={index >= clients.length || undefined}
                         className="flex h-16 w-32 shrink-0 items-center justify-center sm:h-20 sm:w-40"
                     >
                         <Image
                             src={client.logo}
-                            alt={client.name}
+                            alt="" // Nombres no confirmados: logos decorativos, el título de la sección da el contexto
                             width={160}
                             height={80}
                             className="max-h-12 w-auto max-w-[9rem] object-contain opacity-45 grayscale transition duration-500 group-hover:opacity-70 sm:max-h-14 sm:max-w-[10rem]"
@@ -64,7 +66,7 @@ export function Clients() {
                             id="clients-title"
                             className="max-w-4xl text-[clamp(3rem,7vw,6.5rem)] font-semibold uppercase leading-[0.82] tracking-[-0.075em]"
                         >
-                            Quienes
+                            Quiénes
                             <br />
                             confían.
                         </h2>

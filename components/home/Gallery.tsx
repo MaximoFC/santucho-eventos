@@ -10,15 +10,30 @@ import {
 import {
     useCallback,
     useEffect,
+    useRef,
     useState,
 } from "react";
 
 import { GALLERY } from "@/content/gallery";
+import { siteConfig } from "@/config/site";
 
 export function Gallery() {
     const [activeIndex, setActiveIndex] = useState<number | null>(
         null,
     );
+
+    const closeButtonRef = useRef<HTMLButtonElement>(null);
+    const isOpen = activeIndex !== null;
+
+    // Foco al abrir (dentro del diálogo) y devolución al disparador al cerrar.
+    useEffect(() => {
+        if (!isOpen) return;
+
+        const trigger = document.activeElement as HTMLElement | null;
+        closeButtonRef.current?.focus();
+
+        return () => trigger?.focus({ preventScroll: true });
+    }, [isOpen]);
 
     const close = useCallback(() => {
         setActiveIndex(null);
@@ -125,7 +140,7 @@ export function Gallery() {
                                 }}
                                 className={[
                                     "group relative overflow-hidden rounded-2xl text-left",
-                                    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70",
+                                    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff1010]",
                                     item.layout,
                                 ].join(" ")}
                             >
@@ -133,7 +148,11 @@ export function Gallery() {
                                     src={item.src}
                                     alt={item.alt}
                                     fill
-                                    sizes="(max-width: 768px) 50vw, 40vw"
+                                    sizes={
+                                        item.layout.startsWith("col-span-2")
+                                            ? "(max-width: 1023px) 100vw, 34vw"
+                                            : "(max-width: 1023px) 50vw, 34vw"
+                                    }
                                     className="object-cover transition duration-700 ease-out group-hover:scale-105"
                                 />
 
@@ -164,6 +183,7 @@ export function Gallery() {
                         role="dialog"
                         aria-modal="true"
                         aria-label="Galería de imágenes"
+                        data-lenis-prevent
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
@@ -172,7 +192,8 @@ export function Gallery() {
                         {/* Background close */}
                         <button
                             type="button"
-                            aria-label="Cerrar galería"
+                            aria-hidden="true"
+                            tabIndex={-1}
                             onClick={close}
                             className="absolute inset-0 cursor-default"
                         />
@@ -181,7 +202,7 @@ export function Gallery() {
                             {/* Top bar */}
                             <div className="flex items-center justify-between text-[10px] font-medium uppercase tracking-[0.2em] text-white/45">
                                 <span>
-                                    Santucho Producciones
+                                    {siteConfig.name}
                                 </span>
 
                                 <div className="flex items-center gap-4">
@@ -196,6 +217,7 @@ export function Gallery() {
                                     </span>
 
                                     <button
+                                        ref={closeButtonRef}
                                         type="button"
                                         onClick={close}
                                         aria-label="Cerrar galería"
@@ -218,7 +240,7 @@ export function Gallery() {
                                     fill
                                     sizes="100vw"
                                     className="object-contain"
-                                    priority
+                                    loading="eager"
                                 />
 
                                 {/* Previous */}

@@ -217,7 +217,7 @@ export function useCardFaceTexture(content: CardFaceContent) {
                 "rgba(255,255,255,0.38)";
 
             ctx.font =
-                "500 68px system-ui, -apple-system, BlinkMacSystemFont, sans-serif";
+                "600 92px system-ui, -apple-system, BlinkMacSystemFont, sans-serif";
 
             drawTracked(
                 ctx,
