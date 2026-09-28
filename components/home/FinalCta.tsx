@@ -1,19 +1,9 @@
 "use client";
 
-import dynamic from "next/dynamic";
-
 import { AnchorLink } from "@/components/ui/AnchorLink";
 import { whatsappHref } from "@/lib/whatsapp";
 
-const SantuchoLanyard = dynamic(
-    () =>
-        import("./SantuchoLanyard").then(
-            (mod) => mod.SantuchoLanyard,
-        ),
-    {
-        ssr: false,
-    },
-);
+import { SantuchoLanyard } from "./SantuchoLanyard";
 
 export function FinalCTA() {
     return (

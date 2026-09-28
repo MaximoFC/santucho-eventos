@@ -1,141 +1,12 @@
 "use client";
 
+import Image from "next/image";
 import {
-    Canvas,
-    extend,
-    useFrame,
-    useThree,
-} from "@react-three/fiber";
-
-import type {
-    ThreeElement,
-} from "@react-three/fiber";
-
-import {
-    Environment,
-    Lightformer,
-    RoundedBox,
-} from "@react-three/drei";
-
-import {
-    BallCollider,
-    CuboidCollider,
-    interactionGroups,
-    Physics,
-    RigidBody,
-    useRopeJoint,
-    useSphericalJoint,
-    type RapierRigidBody,
-} from "@react-three/rapier";
-
-import {
-    MeshLineGeometry,
-    MeshLineMaterial,
-} from "meshline";
-
-import {
-    useEffect,
-    useRef,
-    useState,
-} from "react";
-
-import * as THREE from "three";
-
-import {
-    useCardFaceTexture,
-} from "./useCardFaceTexture";
-
-/*
- * -------------------------------------------------------------
- * MeshLine
- * -------------------------------------------------------------
- */
-
-extend({
-    MeshLineGeometry,
-    MeshLineMaterial,
-});
-
-declare module "@react-three/fiber" {
-    interface ThreeElements {
-        meshLineGeometry:
-            ThreeElement<typeof MeshLineGeometry>;
-
-        meshLineMaterial:
-            ThreeElement<typeof MeshLineMaterial>;
-    }
-}
-
-/*
- * -------------------------------------------------------------
- * Configuración de tarjeta
- * -------------------------------------------------------------
- */
-
-const CARD_WIDTH = 2.0;
-const CARD_HEIGHT = 2.95;
-const CARD_DEPTH = 0.07;
-
-const ANCHOR_Y = 5.3;
-const ROPE_SEGMENT_LENGTH = 0.6;
-const ROPE_SEGMENT_COUNT = 5;
-const ROPE_TOTAL_LENGTH =
-    ROPE_SEGMENT_LENGTH *
-    ROPE_SEGMENT_COUNT;
-
-/*
- * Centro vertical real donde queda la tarjeta
- * en reposo (colgando derecha bajo el
- * anclaje). Usamos esto como punto de mira
- * de la cámara para que quede centrada sin
- * importar el tamaño de pantalla.
- */
-const CARD_REST_CENTER_Y =
-    ANCHOR_Y -
-    ROPE_TOTAL_LENGTH -
-    CARD_HEIGHT / 2;
-
-const CAMERA_VERTICAL_LIFT = 0.95;    
-
-/*
- * -------------------------------------------------------------
- * Breakpoint mobile
- * -------------------------------------------------------------
- */
-
-function useIsMobile(
-    breakpointPx = 1024,
-) {
-    const [isMobile, setIsMobile] =
-        useState(false);
-
-    useEffect(() => {
-        const mql =
-            window.matchMedia(
-                `(max-width: ${
-                    breakpointPx - 1
-                }px)`,
-            );
-
-        const update = () =>
-            setIsMobile(mql.matches);
-
-        update();
-
-        mql.addEventListener(
-            "change",
-            update,
-        );
-
-        return () =>
-            mql.removeEventListener(
-                "change",
-                update,
-            );
-    }, [breakpointPx]);
-
-    return isMobile;
-}
+    motion,
+    useMotionValue,
+    useReducedMotion,
+    useTransform,
+} from "motion/react";
 
 export type SantuchoLanyardProps = {
     logoSrc?: string;
@@ -146,6 +17,15 @@ export type SantuchoLanyardProps = {
     className?: string;
 };
 
+// Largo de la cinta en px (anclaje → borde superior de la tarjeta).
+const STRAP_LENGTH = 150;
+
+/*
+ * Versión DOM del lanyard: sin WebGL ni física. La tarjeta se arrastra
+ * (mouse o touch) y vuelve con un resorte; la cinta la sigue y la
+ * rotación sale del desplazamiento horizontal. Todo corre en el
+ * compositor vía transforms, así que no pesa en el hilo principal.
+ */
 export function SantuchoLanyard({
     logoSrc = "/logo-black.png",
     eyebrow = "Event production",
@@ -154,963 +34,98 @@ export function SantuchoLanyard({
     captionBottom = "Tucumán · Argentina",
     className,
 }: SantuchoLanyardProps) {
-    const containerRef =
-        useRef<HTMLDivElement>(null);
+    const reduceMotion = useReducedMotion();
 
-    const [inView, setInView] =
-        useState(false);
+    const x = useMotionValue(0);
+    const y = useMotionValue(0);
 
-    const isMobile = useIsMobile();
-
-    /*
-     * -----------------------------------------------------
-     * Sólo "cae" cuando la sección es visible
-     * -----------------------------------------------------
-     */
-
-    useEffect(() => {
-        const el =
-            containerRef.current;
-
-        if (!el) return;
-
-        const observer =
-            new IntersectionObserver(
-                ([entry]) => {
-                    // Se sigue observando: fuera de pantalla se pausa física + render (GPU en 0).
-                    setInView(
-                        entry.isIntersecting,
-                    );
-                },
-                {
-                    threshold: 0.1,
-                },
-            );
-
-        observer.observe(el);
-
-        return () =>
-            observer.disconnect();
-    }, []);
+    // Con la tarjeta arrastrada a un costado, se inclina hacia el anclaje.
+    const rotate = useTransform(x, [-250, 250], [18, -18]);
+    const strapY2 = useTransform(y, (v) => STRAP_LENGTH + v);
 
     return (
         <div
-            ref={containerRef}
-            className={`relative h-full w-full ${
-                className ?? ""
-            }`}
+            className={`relative flex h-full w-full justify-center ${className ?? ""}`}
         >
-            <Canvas
-                camera={{
-                    position: [0, 0.5, 13],
-                    fov: 22,
+            {/* Balanceo en reposo: todo el conjunto pivota desde el anclaje */}
+            <motion.div
+                className="relative flex flex-col items-center"
+                style={{ transformOrigin: "50% 0%" }}
+                animate={reduceMotion ? undefined : { rotate: [-2.5, 2.5] }}
+                transition={{
+                    duration: 3.2,
+                    ease: "easeInOut",
+                    repeat: Infinity,
+                    repeatType: "mirror",
                 }}
-                gl={{
-                    alpha: true,
-                    antialias: true,
-                }}
-                dpr={[1, 2]}
-                frameloop={
-                    inView
-                        ? "always"
-                        : "never"
-                }
             >
-                <ambientLight intensity={0.75} />
+                {/* Anclaje */}
+                <span className="relative z-10 h-3 w-3 rounded-full bg-white/25" />
 
-                <directionalLight
-                    position={[3, 6, 4]}
-                    intensity={1.15}
-                />
-
-                <Physics
-                    gravity={[0, -25, 0]}
-                    interpolate
-                    timeStep={1 / 60}
-                    paused={!inView}
+                {/* Cinta: línea del anclaje al borde superior de la tarjeta */}
+                <svg
+                    className="pointer-events-none absolute left-1/2 top-1.5 overflow-visible"
+                    width="1"
+                    height="1"
                 >
-                    <Band
-                        logoSrc={logoSrc}
-                        eyebrow={eyebrow}
-                        index={index}
-                        captionTop={captionTop}
-                        captionBottom={captionBottom}
-                        isMobile={isMobile}
+                    <motion.line
+                        x1={0}
+                        y1={0}
+                        x2={x}
+                        y2={strapY2}
+                        stroke="#2a2929"
+                        strokeWidth={10}
+                        strokeLinecap="round"
                     />
-                </Physics>
+                </svg>
 
-                <Environment resolution={256}>
-                    <group
-                        rotation={[
-                            Math.PI / 2,
-                            0,
-                            0,
-                        ]}
-                    >
-                        <Lightformer
-                            intensity={2.5}
-                            color="white"
-                            position={[
-                                0,
-                                -1,
-                                5,
-                            ]}
-                            scale={[
-                                10,
-                                10,
-                                1,
-                            ]}
-                            form="rect"
+                <motion.div
+                    drag
+                    dragSnapToOrigin
+                    dragElastic={0.35}
+                    dragTransition={{ bounceStiffness: 260, bounceDamping: 9 }}
+                    whileDrag={{ scale: 1.03, cursor: "grabbing" }}
+                    style={{
+                        x,
+                        y,
+                        rotate,
+                        marginTop: STRAP_LENGTH - 12,
+                        transformOrigin: "50% 0%",
+                        touchAction: "none",
+                    }}
+                    className="relative aspect-[2/2.95] w-[min(62vw,280px)] cursor-grab select-none rounded-[1.1rem] border border-white/15 bg-[#0a0a0a] p-5 shadow-[0_30px_80px_-20px_rgba(0,0,0,0.9)] lg:w-[300px]"
+                >
+                    {/* Ojal de la cinta */}
+                    <span className="absolute left-1/2 top-3 h-2 w-10 -translate-x-1/2 rounded-full bg-white/10" />
+
+                    <div className="pointer-events-none absolute inset-2.5 rounded-[0.9rem] border border-white/5 bg-[linear-gradient(135deg,rgba(255,255,255,0.075),transparent_35%,transparent_75%,rgba(255,255,255,0.025))]" />
+
+                    <div className="relative flex h-full flex-col justify-between text-white">
+                        <div className="flex justify-between pt-3 text-[0.6rem] font-semibold uppercase tracking-[0.2em]">
+                            <span className="text-white/45">{eyebrow}</span>
+                            <span className="text-white/40">{index}</span>
+                        </div>
+
+                        <Image
+                            src={logoSrc}
+                            alt=""
+                            width={400}
+                            height={200}
+                            draggable={false}
+                            className="mx-auto h-auto max-h-[30%] w-[72%] object-contain"
                         />
 
-                        <Lightformer
-                            intensity={1.2}
-                            color="white"
-                            position={[
-                                -2,
-                                3,
-                                1,
-                            ]}
-                            scale={[
-                                4,
-                                4,
-                                1,
-                            ]}
-                            form="rect"
-                        />
-                    </group>
-                </Environment>
-            </Canvas>
+                        <div className="uppercase">
+                            <p className="text-[0.6rem] font-semibold tracking-[0.12em] text-white/40">
+                                {captionTop}
+                            </p>
+                            <p className="mt-1 text-xs font-bold tracking-[0.14em] text-white/75">
+                                {captionBottom}
+                            </p>
+                        </div>
+                    </div>
+                </motion.div>
+            </motion.div>
         </div>
-    );
-}
-
-/*
- * -------------------------------------------------------------
- * Band
- * -------------------------------------------------------------
- */
-
-function Band({
-    logoSrc,
-    eyebrow,
-    index,
-    captionTop,
-    captionBottom,
-    isMobile,
-}: Required<
-    Omit<
-        SantuchoLanyardProps,
-        "className" | "logoSrc"
-    >
-> & {
-    logoSrc: string;
-    isMobile: boolean;
-}) {
-    const band =
-        useRef<
-            THREE.Mesh<
-                MeshLineGeometry,
-                THREE.Material
-            >
-        >(null!);
-
-    const fixed =
-        useRef<RapierRigidBody>(null!);
-
-    const j1 =
-        useRef<RapierRigidBody>(null!);
-
-    const j2 =
-        useRef<RapierRigidBody>(null!);
-
-    const j3 =
-        useRef<RapierRigidBody>(null!);
-
-    const j4 =
-        useRef<RapierRigidBody>(null!);
-
-    const j5 =
-        useRef<RapierRigidBody>(null!);
-
-    const card =
-        useRef<RapierRigidBody>(null!);
-
-    const {
-        width,
-        height,
-    } = useThree(
-        (state) => state.size,
-    );
-
-    const camera = useThree(
-        (state) => state.camera,
-    );
-
-    useEffect(() => {
-        camera.lookAt(
-            0,
-            CARD_REST_CENTER_Y - CAMERA_VERTICAL_LIFT,
-            0,
-        );
-    }, [camera]);
-
-    /*
-     * ---------------------------------------------------------
-     * Objetos reutilizados
-     * ---------------------------------------------------------
-     */
-
-    const [curve] = useState(
-        () =>
-            new THREE.CatmullRomCurve3([
-                new THREE.Vector3(),
-                new THREE.Vector3(),
-                new THREE.Vector3(),
-                new THREE.Vector3(),
-                new THREE.Vector3(),
-                new THREE.Vector3(),
-            ]),
-    );
-
-    const vec =
-        useRef(
-            new THREE.Vector3(),
-        ).current;
-
-    const dir =
-        useRef(
-            new THREE.Vector3(),
-        ).current;
-
-    const center =
-        useRef(
-            new THREE.Vector3(),
-        ).current;
-
-    const ang =
-        useRef(
-            new THREE.Vector3(),
-        ).current;
-
-    const quat =
-        useRef(
-            new THREE.Quaternion(),
-        ).current;
-
-    const euler =
-        useRef(
-            new THREE.Euler(),
-        ).current;
-
-    const [
-        dragged,
-        setDragged,
-    ] =
-        useState<
-            THREE.Vector3 | false
-        >(false);
-
-    /*
-     * ---------------------------------------------------------
-     * Física de la cuerda
-     * ---------------------------------------------------------
-     */
-
-    useRopeJoint(
-        fixed,
-        j1,
-        [
-            [0, 0, 0],
-            [0, 0, 0],
-            ROPE_SEGMENT_LENGTH,
-        ],
-    );
-
-    useRopeJoint(
-        j1,
-        j2,
-        [
-            [0, 0, 0],
-            [0, 0, 0],
-            ROPE_SEGMENT_LENGTH,
-        ],
-    );
-
-    useRopeJoint(
-        j2,
-        j3,
-        [
-            [0, 0, 0],
-            [0, 0, 0],
-            ROPE_SEGMENT_LENGTH,
-        ],
-    );
-
-    useRopeJoint(
-        j3,
-        j4,
-        [
-            [0, 0, 0],
-            [0, 0, 0],
-            ROPE_SEGMENT_LENGTH,
-        ],
-    );
-
-    useRopeJoint(
-        j4,
-        j5,
-        [
-            [0, 0, 0],
-            [0, 0, 0],
-            ROPE_SEGMENT_LENGTH,
-        ],
-    );
-
-    useSphericalJoint(
-        j5,
-        card,
-        [
-            [0, 0, 0],
-            [0, CARD_HEIGHT / 2, 0],
-        ],
-    );
-
-    /*
-     * ---------------------------------------------------------
-     * Cursor
-     * ---------------------------------------------------------
-     */
-
-    useEffect(() => {
-        if (dragged) {
-            document.body.style.cursor =
-                "grabbing";
-
-            return () => {
-                document.body.style.cursor =
-                    "auto";
-            };
-        }
-
-        document.body.style.cursor =
-            "auto";
-    }, [dragged]);
-
-    /*
-     * ---------------------------------------------------------
-     * Render loop
-     * ---------------------------------------------------------
-     */
-
-    useFrame((state) => {
-        /*
-         * -----------------------------------------------------
-         * Drag
-         * -----------------------------------------------------
-         */
-
-        if (
-            dragged &&
-            card.current
-        ) {
-            const camera =
-                state.camera as THREE.PerspectiveCamera;
-
-            /*
-             * -------------------------------------------------
-             * Punto bajo el cursor
-             * -------------------------------------------------
-             */
-
-            vec
-                .set(
-                    state.pointer.x,
-                    state.pointer.y,
-                    0.5,
-                )
-                .unproject(camera);
-
-            dir
-                .copy(vec)
-                .sub(
-                    camera.position,
-                )
-                .normalize();
-
-            vec.add(
-                dir.multiplyScalar(
-                    camera.position.length(),
-                ),
-            );
-
-            /*
-             * -------------------------------------------------
-             * Centro real de la vista a esa misma
-             * profundidad (contempla la leve
-             * inclinación de la cámara)
-             * -------------------------------------------------
-             */
-
-            center
-                .set(
-                    0,
-                    0,
-                    0.5,
-                )
-                .unproject(camera);
-
-            dir
-                .copy(center)
-                .sub(
-                    camera.position,
-                )
-                .normalize();
-
-            center.add(
-                dir.multiplyScalar(
-                    camera.position.length(),
-                ),
-            );
-
-            /*
-             * -------------------------------------------------
-             * Límites visibles a esa profundidad, dejando
-             * lugar para que la tarjeta entera quede
-             * siempre dentro de cámara
-             * -------------------------------------------------
-             */
-
-            const dragDistance =
-                camera.position.distanceTo(
-                    center,
-                );
-
-            const halfHeight =
-                Math.tan(
-                    THREE.MathUtils.degToRad(
-                        camera.fov,
-                    ) / 2,
-                ) * dragDistance;
-
-            const halfWidth =
-                halfHeight *
-                camera.aspect;
-
-            const maxX = Math.max(
-                0,
-                halfWidth -
-                    CARD_WIDTH / 2,
-            );
-
-            const maxY = Math.max(
-                0,
-                halfHeight -
-                    CARD_HEIGHT / 2,
-            );
-
-            const targetX =
-                THREE.MathUtils.clamp(
-                    vec.x -
-                        dragged.x,
-                    center.x - maxX,
-                    center.x + maxX,
-                );
-
-            const targetY =
-                THREE.MathUtils.clamp(
-                    vec.y -
-                        dragged.y,
-                    center.y - maxY,
-                    center.y + maxY,
-                );
-
-            card.current.setNextKinematicTranslation(
-                {
-                    x: targetX,
-                    y: targetY,
-
-                    z:
-                        vec.z -
-                        dragged.z,
-                },
-            );
-        }
-
-        /*
-         * -----------------------------------------------------
-         * Guardas
-         * -----------------------------------------------------
-         */
-
-        if (
-            !fixed.current ||
-            !j1.current ||
-            !j2.current ||
-            !j3.current ||
-            !j4.current ||
-            !j5.current ||
-            !card.current ||
-            !band.current
-        ) {
-            return;
-        }
-
-        /*
-         * -----------------------------------------------------
-         * Posiciones
-         * -----------------------------------------------------
-         */
-
-        const p0 =
-            j5.current.translation();
-
-        const p1 =
-            j4.current.translation();
-
-        const p2 =
-            j3.current.translation();
-
-        const p3 =
-            j2.current.translation();
-
-        const p4 =
-            j1.current.translation();
-
-        const p5 =
-            fixed.current.translation();
-
-        /*
-         * -----------------------------------------------------
-         * Protección contra NaN
-         * -----------------------------------------------------
-         */
-
-        const values = [
-            p0,
-            p1,
-            p2,
-            p3,
-            p4,
-            p5,
-        ].flatMap(
-            (p) => [
-                p.x,
-                p.y,
-                p.z,
-            ],
-        );
-
-        if (
-            values.some(
-                (value) =>
-                    !Number.isFinite(
-                        value,
-                    ),
-            )
-        ) {
-            return;
-        }
-
-        /*
-         * -----------------------------------------------------
-         * Actualizar cuerda
-         * -----------------------------------------------------
-         */
-
-        curve.points[0].copy(p0);
-        curve.points[1].copy(p1);
-        curve.points[2].copy(p2);
-        curve.points[3].copy(p3);
-        curve.points[4].copy(p4);
-        curve.points[5].copy(p5);
-
-        band.current.geometry.setPoints(
-            curve.getPoints(48),
-        );
-
-        /*
-         * -----------------------------------------------------
-         * Estabilización de tarjeta
-         * -----------------------------------------------------
-         */
-
-        const q =
-            card.current.rotation();
-
-        quat.set(
-            q.x,
-            q.y,
-            q.z,
-            q.w,
-        );
-
-        euler.setFromQuaternion(
-            quat,
-            "YXZ",
-        );
-
-        ang.copy(
-            card.current.angvel(),
-        );
-
-        const angMag = Math.hypot(
-            ang.x,
-            ang.y,
-            ang.z,
-        );
-
-        const yaw = euler.y;
-
-        /*
-         * Sólo corregimos si hay movimiento o desvío real.
-         * Si no, dejamos que la física la deje dormir en paz
-         * en vez de despertarla en cada frame (eso era lo que
-         * generaba la vibración constante en reposo).
-         */
-
-        if (
-            !card.current.isSleeping() &&
-            (angMag > 0.02 ||
-                Math.abs(yaw) > 0.03)
-        ) {
-            card.current.setAngvel(
-                {
-                    x: ang.x,
-                    y:
-                        ang.y -
-                        yaw * 0.15,
-                    z: ang.z,
-                },
-                false,
-            );
-        }
-    });
-
-    return (
-        <>
-            {/*
-             * -------------------------------------------------
-             * Punto fijo
-             * -------------------------------------------------
-             */}
-
-            <RigidBody
-                ref={fixed}
-                type="fixed"
-                position={[
-                    0,
-                    ANCHOR_Y,
-                    0,
-                ]}
-            />
-
-            {/*
-             * -------------------------------------------------
-             * Joint 1
-             * -------------------------------------------------
-             */}
-
-            <RigidBody
-                position={[0.002, ANCHOR_Y, 0]}
-                ref={j1}
-                angularDamping={9}
-                linearDamping={4.5}
-                collisionGroups={interactionGroups(
-                    1,
-                    [],
-                )}
-            >
-                <BallCollider
-                    args={[0.08]}
-                />
-            </RigidBody>
-
-            {/*
-             * -------------------------------------------------
-             * Joint 2
-             * -------------------------------------------------
-             */}
-
-            <RigidBody
-                position={[0.004, ANCHOR_Y, 0]}
-                ref={j2}
-                angularDamping={9}
-                linearDamping={4.5}
-                collisionGroups={interactionGroups(
-                    1,
-                    [],
-                )}
-            >
-                <BallCollider
-                    args={[0.08]}
-                />
-            </RigidBody>
-
-            {/*
-             * -------------------------------------------------
-             * Joint 3
-             * -------------------------------------------------
-             */}
-
-            <RigidBody
-                position={[0.006, ANCHOR_Y, 0]}
-                ref={j3}
-                angularDamping={9}
-                linearDamping={4.5}
-                collisionGroups={interactionGroups(
-                    1,
-                    [],
-                )}
-            >
-                <BallCollider
-                    args={[0.08]}
-                />
-            </RigidBody>
-
-            {/*
-             * -------------------------------------------------
-             * Joint 4
-             * -------------------------------------------------
-             */}
-
-            <RigidBody
-                position={[0.008, ANCHOR_Y, 0]}
-                ref={j4}
-                angularDamping={9}
-                linearDamping={4.5}
-                collisionGroups={interactionGroups(
-                    1,
-                    [],
-                )}
-            >
-                <BallCollider
-                    args={[0.08]}
-                />
-            </RigidBody>
-
-            {/*
-             * -------------------------------------------------
-             * Joint 5
-             * -------------------------------------------------
-             */}
-
-            <RigidBody
-                position={[0.01, ANCHOR_Y, 0]}
-                ref={j5}
-                angularDamping={9}
-                linearDamping={4.5}
-                collisionGroups={interactionGroups(
-                    1,
-                    [],
-                )}
-            >
-                <BallCollider
-                    args={[0.08]}
-                />
-            </RigidBody>
-
-            {/*
-             * -------------------------------------------------
-             * Card
-             * -------------------------------------------------
-             */}
-
-            <RigidBody
-                ref={card}
-                type={
-                    dragged
-                        ? "kinematicPosition"
-                        : "dynamic"
-                }
-                position={[0.012, 2.5, 0]}
-                angularDamping={6.5}
-                linearDamping={3.5}
-                canSleep={true}
-                collisionGroups={interactionGroups(
-                    1,
-                    [],
-                )}
-            >
-                <CuboidCollider
-                    args={[
-                        CARD_WIDTH / 2,
-                        CARD_HEIGHT / 2,
-                        CARD_DEPTH,
-                    ]}
-                />
-
-                <group
-                    onPointerUp={
-                        isMobile
-                            ? undefined
-                            : (event) => {
-                                  (
-                                      event.target as Element
-                                  ).releasePointerCapture?.(
-                                      event.pointerId,
-                                  );
-
-                                  setDragged(
-                                      false,
-                                  );
-                              }
-                    }
-                    onPointerDown={
-                        isMobile
-                            ? undefined
-                            : (event) => {
-                                  (
-                                      event.target as Element
-                                  ).setPointerCapture?.(
-                                      event.pointerId,
-                                  );
-
-                                  setDragged(
-                                      new THREE.Vector3()
-                                          .copy(
-                                              event.point as THREE.Vector3,
-                                          )
-                                          .sub(
-                                              vec.copy(
-                                                  card.current.translation() as unknown as THREE.Vector3,
-                                              ),
-                                          ),
-                                  );
-                              }
-                    }
-                >
-                    <CardFace
-                        logoSrc={logoSrc}
-                        eyebrow={eyebrow}
-                        index={index}
-                        captionTop={
-                            captionTop
-                        }
-                        captionBottom={
-                            captionBottom
-                        }
-                    />
-                </group>
-            </RigidBody>
-
-            {/*
-             * -------------------------------------------------
-             * Cuerda visible
-             * -------------------------------------------------
-             */}
-
-            <mesh ref={band}>
-                <meshLineGeometry />
-
-                <meshLineMaterial
-                    args={[
-                        {
-                            color: "#242323",
-                            resolution: new THREE.Vector2(
-                                width || 1,
-                                height || 1,
-                            ),
-                        },
-                    ]}
-                    resolution={[
-                        width || 1,
-                        height || 1,
-                    ]}
-                    lineWidth={0.075}
-                    transparent
-                    opacity={0.96}
-                />
-            </mesh>
-        </>
-    );
-}
-
-/*
- * -------------------------------------------------------------
- * Card Face
- * -------------------------------------------------------------
- */
-
-function CardFace({
-    logoSrc,
-    eyebrow,
-    index,
-    captionTop,
-    captionBottom,
-}: {
-    logoSrc: string;
-    eyebrow: string;
-    index: string;
-    captionTop: string;
-    captionBottom: string;
-}) {
-    const texture =
-        useCardFaceTexture({
-            logoSrc,
-            eyebrow,
-            index,
-            captionTop,
-            captionBottom,
-        });
-
-    return (
-        <group>
-            {/*
-             * -------------------------------------------------
-             * Cuerpo 3D
-             * -------------------------------------------------
-             */}
-
-            <RoundedBox
-                args={[
-                    CARD_WIDTH,
-                    CARD_HEIGHT,
-                    CARD_DEPTH,
-                ]}
-                radius={0.09}
-                smoothness={6}
-                castShadow
-            >
-                <meshStandardMaterial
-                    color="#0a0a0a"
-                    roughness={0.42}
-                    metalness={0.08}
-                />
-            </RoundedBox>
-
-            {/*
-             * -------------------------------------------------
-             * Cara visual
-             * -------------------------------------------------
-             */}
-
-            {texture && (
-                <mesh
-                    position={[
-                        0,
-                        0,
-                        CARD_DEPTH / 2 +
-                            0.004,
-                    ]}
-                >
-                    <planeGeometry
-                        args={[
-                            CARD_WIDTH -
-                                0.02,
-                            CARD_HEIGHT -
-                                0.02,
-                        ]}
-                    />
-
-                    <meshBasicMaterial
-                        map={texture}
-                        transparent
-                        toneMapped={false}
-                        depthWrite={false}
-                    />
-                </mesh>
-            )}
-        </group>
     );
 }
