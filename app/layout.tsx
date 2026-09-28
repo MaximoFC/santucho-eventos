@@ -34,15 +34,30 @@ export const metadata: Metadata = {
     siteName: siteConfig.name,
     type: "website",
     locale: "es_AR",
-    // ponytail: foto del Hero; reemplazar por una pieza 1200x630 con logo cuando exista.
-    images: ["/images/hero-main.PNG"],
+    images: [
+      {
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: title,
+      },
+    ],
   },
 
   twitter: {
     card: "summary_large_image",
     title,
     description,
-    images: ["/images/hero-main.PNG"],
+    images: ["/og-image.png"],
+  },
+
+  // favicon.ico lo sirve Next desde app/favicon.ico automáticamente.
+  icons: {
+    icon: [
+      { url: "/favicon-16x16.png", sizes: "16x16", type: "image/png" },
+      { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" },
+    ],
+    apple: "/apple-touch-icon.png",
   },
 
   robots: {
