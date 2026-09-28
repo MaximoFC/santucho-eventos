@@ -56,13 +56,17 @@ export function Hero() {
                     aria-hidden="true"
                     className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-black/10"
                 />
+                <div
+                    aria-hidden="true"
+                    className="absolute inset-0 bg-[#050505]/60 lg:hidden"
+                />
 
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.6, duration: 0.7 }}
                     style={{ willChange: "transform" }}
-                    className="absolute bottom-[8%] right-[6%] rounded-full border border-white/10 bg-black/65 px-4 py-2.5 backdrop-blur-md"
+                    className="absolute bottom-[8%] right-[6%] hidden rounded-full lg:block border border-white/10 bg-black/65 px-4 py-2.5 backdrop-blur-md"
                 >
                     <p className="text-[10px] font-medium uppercase tracking-[0.2em] text-white/65">
                         Producción audiovisual
@@ -75,7 +79,7 @@ export function Hero() {
                 initial={{ opacity: 0, x: 40, rotate: 2 }}
                 animate={{ opacity: 1, x: 0, rotate: 2 }}
                 transition={{ delay: 0.3, duration: 0.9, ease: "easeOut" }}
-                className="absolute bottom-10 left-[54%] z-20 hidden h-[190px] w-[230px] overflow-hidden rounded-[1.5rem] border border-white/10 shadow-2xl sm:block lg:bottom-14 lg:left-[38%] lg:h-[220px] lg:w-[260px]"
+                className="absolute bottom-10 left-[54%] z-20 hidden h-[190px] w-[230px] overflow-hidden rounded-[1.5rem] border border-white/10 shadow-2xl lg:block lg:bottom-14 lg:left-[38%] lg:h-[220px] lg:w-[260px]"
             >
                 <Image
                     src="/images/hero-led.PNG"
