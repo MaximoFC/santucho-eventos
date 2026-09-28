@@ -3,8 +3,13 @@ export const siteConfig = {
   shortName: "Santucho",
   description:
     "Soluciones audiovisuales profesionales para hacer de cada evento una experiencia inolvidable.",
-  // Dominio de producción. Definir NEXT_PUBLIC_SITE_URL en el deploy.
-  url: process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000",
+  // Dominio de producción. Definir NEXT_PUBLIC_SITE_URL cuando haya dominio propio;
+  // mientras tanto usa el dominio de producción que Vercel inyecta en cada deploy.
+  url:
+    process.env.NEXT_PUBLIC_SITE_URL ??
+    (process.env.VERCEL_PROJECT_PRODUCTION_URL
+      ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+      : "http://localhost:3000"),
   location: "Tucumán, Argentina",
   founded: 2020,
 
