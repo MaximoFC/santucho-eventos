@@ -1,6 +1,7 @@
 // components/Hero.tsx
 "use client";
 
+import { Icon } from "@/components/ui/Icon";
 import Image from "next/image";
 import { AnimatePresence, motion, useScroll, useSpring, useTransform } from "motion/react";
 
@@ -167,7 +168,7 @@ export function Hero() {
                             >
                                 {siteConfig.hero.primaryCta}
                                 <span aria-hidden="true" className="transition-transform duration-300 group-hover:translate-x-1">
-                                    →
+                                    <Icon name="arrow-right" />
                                 </span>
                             </AnchorLink>
 
@@ -222,7 +223,7 @@ export function Hero() {
                         aria-hidden="true"
                         className="flex h-7 w-7 items-center justify-center rounded-full border border-white/15 transition-transform duration-300 group-hover:translate-y-1 group-hover:border-white/30"
                     >
-                        ↓
+                        <Icon name="arrow-down" />
                     </span>
                 </AnchorLink>
             </motion.div>

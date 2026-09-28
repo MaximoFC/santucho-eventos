@@ -1,5 +1,6 @@
 "use client";
 
+import { Icon } from "@/components/ui/Icon";
 import Image from "next/image";
 import Link from "next/link";
 import { motion } from "motion/react";
@@ -133,7 +134,7 @@ export function Services() {
                                                     aria-hidden="true"
                                                     className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-white/25 text-lg transition-all duration-300 group-hover:translate-x-1 group-hover:border-white group-hover:bg-white group-hover:text-black"
                                                 >
-                                                    ↗
+                                                    <Icon name="arrow-up-right" />
                                                 </span>
                                             </div>
                                         </div>
@@ -161,7 +162,7 @@ export function Services() {
                             aria-hidden="true"
                             className="transition-transform duration-300 group-hover:translate-x-1"
                         >
-                            →
+                            <Icon name="arrow-right" />
                         </span>
                     </Link>
                 </div>

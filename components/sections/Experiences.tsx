@@ -1,5 +1,6 @@
 "use client";
 
+import { Icon } from "@/components/ui/Icon";
 import Image from "next/image";
 import { AnchorLink } from "@/components/ui/AnchorLink";
 import { motion, useScroll, useTransform } from "motion/react";
@@ -94,7 +95,7 @@ function ExperienceCard({
             className="mt-7 inline-flex items-center gap-3 text-xs font-medium uppercase tracking-[0.18em] text-white/60 transition-colors duration-500 group-hover:text-white"
           >
             <span className="flex h-10 w-10 items-center justify-center rounded-full border border-white/15 text-sm transition-all duration-500 group-hover:border-[#ff1010] group-hover:bg-[#ff1010]">
-              ↗
+              <Icon name="arrow-up-right" />
             </span>
             Consultar
           </div>
@@ -147,7 +148,7 @@ export function Experiences() {
                 aria-hidden="true"
                 className="transition-transform duration-300 group-hover:translate-x-1"
               >
-                →
+                <Icon name="arrow-right" />
               </span>
             </AnchorLink>
           </div>

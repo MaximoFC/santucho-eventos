@@ -1,5 +1,6 @@
 "use client";
 
+import { Icon } from "@/components/ui/Icon";
 import Image from "next/image";
 
 import {
@@ -167,7 +168,7 @@ export function Gallery() {
                                         aria-hidden="true"
                                         className="flex h-9 w-9 translate-y-2 items-center justify-center rounded-full border border-white/20 bg-black/20 text-sm opacity-0 backdrop-blur-md transition-all duration-300 group-hover:translate-y-0 group-hover:border-white/50 group-hover:opacity-100"
                                     >
-                                        ↗
+                                        <Icon name="arrow-up-right" />
                                     </span>
                                 </div>
                             </motion.button>
@@ -250,7 +251,7 @@ export function Gallery() {
                                     onClick={() => move(-1)}
                                     className="absolute left-0 flex h-11 w-11 items-center justify-center rounded-full border border-white/20 bg-black/30 text-xl text-white backdrop-blur-sm transition-colors hover:bg-white/10"
                                 >
-                                    ←
+                                    <Icon name="arrow-left" />
                                 </button>
 
                                 {/* Next */}
@@ -260,7 +261,7 @@ export function Gallery() {
                                     onClick={() => move(1)}
                                     className="absolute right-0 flex h-11 w-11 items-center justify-center rounded-full border border-white/20 bg-black/30 text-xl text-white backdrop-blur-sm transition-colors hover:bg-white/10"
                                 >
-                                    →
+                                    <Icon name="arrow-right" />
                                 </button>
                             </div>
                         </div>

@@ -1,5 +1,6 @@
 "use client";
 
+import { Icon } from "@/components/ui/Icon";
 import Image from "next/image";
 import { useReducedMotion } from "motion/react";
 import { useEffect, useRef, useState } from "react";
@@ -184,7 +185,7 @@ export function ServiceGallery({ items, title }: ServiceGalleryProps) {
                                         onClick={() => setPaused((value) => !value)}
                                         className="flex h-11 w-11 items-center justify-center rounded-full border border-white/15 text-xs text-white/60 transition-colors hover:border-white/40 hover:text-white focus-visible:outline-2 focus-visible:outline-[#ff1010]"
                                     >
-                                        <span aria-hidden="true">{paused ? "▶" : "❚❚"}</span>
+                                        <span aria-hidden="true"><Icon name={paused ? "play" : "pause"} /></span>
                                     </button>
                                 )}
 
@@ -194,7 +195,7 @@ export function ServiceGallery({ items, title }: ServiceGalleryProps) {
                                     onClick={() => goTo(active - 1)}
                                     className="flex h-11 w-11 items-center justify-center rounded-full border border-white/15 text-white/60 transition-colors hover:border-white/40 hover:text-white focus-visible:outline-2 focus-visible:outline-[#ff1010]"
                                 >
-                                    <span aria-hidden="true">←</span>
+                                    <span aria-hidden="true"><Icon name="arrow-left" /></span>
                                 </button>
 
                                 <button
@@ -203,7 +204,7 @@ export function ServiceGallery({ items, title }: ServiceGalleryProps) {
                                     onClick={() => goTo(active + 1)}
                                     className="flex h-11 w-11 items-center justify-center rounded-full border border-white/15 text-white/60 transition-colors hover:border-white/40 hover:text-white focus-visible:outline-2 focus-visible:outline-[#ff1010]"
                                 >
-                                    <span aria-hidden="true">→</span>
+                                    <span aria-hidden="true"><Icon name="arrow-right" /></span>
                                 </button>
                             </div>
                         </div>

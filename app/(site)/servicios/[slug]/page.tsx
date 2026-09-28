@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 
+import { Icon } from "@/components/ui/Icon";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -76,7 +77,7 @@ export default async function ServicePage({
                         href="/servicios"
                         className="inline-flex items-center gap-2 py-2 text-xs uppercase tracking-[0.2em] text-white/50 transition-colors hover:text-white"
                     >
-                        <span aria-hidden="true">←</span>
+                        <span aria-hidden="true"><Icon name="arrow-left" /></span>
                         Todos los servicios
                     </Link>
 
@@ -182,7 +183,7 @@ export default async function ServicePage({
                             className="group inline-flex w-fit items-center gap-3 rounded-full bg-white px-6 py-3.5 text-sm font-medium text-black transition-transform duration-300 hover:scale-[1.03] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#ff1010]"
                         >
                             Consultar por WhatsApp
-                            <span aria-hidden="true" className="transition-transform duration-300 group-hover:translate-x-1">→</span>
+                            <span aria-hidden="true" className="transition-transform duration-300 group-hover:translate-x-1"><Icon name="arrow-right" /></span>
                         </AnchorLink>
                     </div>
                 </div>

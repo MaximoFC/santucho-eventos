@@ -1,5 +1,6 @@
 "use client";
 
+import { Icon } from "@/components/ui/Icon";
 import { AnchorLink } from "@/components/ui/AnchorLink";
 import { whatsappHref } from "@/lib/whatsapp";
 
@@ -53,7 +54,7 @@ export function FinalCTA() {
                                 aria-hidden="true"
                                 className="transition-transform duration-300 group-hover:translate-x-1"
                             >
-                                →
+                                <Icon name="arrow-right" />
                             </span>
                         </AnchorLink>
                     </div>

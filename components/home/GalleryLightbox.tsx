@@ -1,5 +1,6 @@
 "use client";
 
+import { Icon } from "@/components/ui/Icon";
 import Image from "next/image";
 
 import {
@@ -155,7 +156,7 @@ export function GalleryLightbox({
                                 aria-label="Imagen anterior"
                                 className="absolute left-4 top-1/2 z-10 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full border border-white/15 bg-black/30 text-xl text-white backdrop-blur-sm transition-all duration-300 hover:border-white/40 hover:bg-white/10 sm:left-8 lg:left-10"
                             >
-                                ←
+                                <Icon name="arrow-left" />
                             </button>
 
                             <button
@@ -164,7 +165,7 @@ export function GalleryLightbox({
                                 aria-label="Imagen siguiente"
                                 className="absolute right-4 top-1/2 z-10 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full border border-white/15 bg-black/30 text-xl text-white backdrop-blur-sm transition-all duration-300 hover:border-white/40 hover:bg-white/10 sm:right-8 lg:right-10"
                             >
-                                →
+                                <Icon name="arrow-right" />
                             </button>
                         </>
                     )}

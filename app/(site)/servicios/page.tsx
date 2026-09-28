@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Icon } from "@/components/ui/Icon";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -83,7 +84,7 @@ export default function ServicesPage() {
                                         aria-hidden="true"
                                         className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-white/25 text-lg transition-all duration-300 group-hover:border-white group-hover:bg-white group-hover:text-black"
                                     >
-                                        ↗
+                                        <Icon name="arrow-up-right" />
                                     </span>
                                 </div>
                             </Link>
