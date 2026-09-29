@@ -42,6 +42,7 @@ function ExperienceCard({
       <AnchorLink
         href={whatsappHref(
           `Hola Santucho, quiero consultar por un evento de tipo ${experience.category.toLowerCase()}.`,
+          siteConfig.contact.eventsWhatsapp,
         )}
         ariaLabel={`Consultar por ${experience.category.toLowerCase()} por WhatsApp`}
         className="block rounded-[1.75rem] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#ff1010]"
