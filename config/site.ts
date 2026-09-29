@@ -109,10 +109,10 @@ export const siteConfig = {
   experiences: [
     {
       number: "01",
-      category: "EVENTOS UNIVERSITARIOS",
+      category: "SEMANAS ESTUDIANTILES",
       title: "Eventos\nque se sienten",
       description:
-        "Producción audiovisual para eventos universitarios, recitales y festivales.",
+        "Producción audiovisual para semanas estudiantiles de colegios y escuelas, recitales y festivales.",
       image: "/images/experiences/semana-estudiantil-preview.PNG",
       imagePosition: "center 35%",
     },
