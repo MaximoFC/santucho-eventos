@@ -7,6 +7,7 @@ import { notFound } from "next/navigation";
 
 import { services } from "@/data/services";
 import { ServiceGallery } from "@/components/services/service-gallery";
+import { siteConfig } from "@/config/site";
 import { whatsappHref } from "@/lib/whatsapp";
 import { AnchorLink } from "@/components/ui/AnchorLink";
 
@@ -179,7 +180,12 @@ export default async function ServicePage({
                         </div>
 
                         <AnchorLink
-                            href={whatsappHref(`Hola Santucho, quiero consultar por el servicio de ${service.title}.`)}
+                            href={whatsappHref(
+                                `Hola Santucho, quiero consultar por el servicio de ${service.title}.`,
+                                service.category === "ENTRETENIMIENTO" || service.category === "AMBIENTACIÓN"
+                                    ? siteConfig.contact.entertainmentWhatsapp
+                                    : undefined,
+                            )}
                             className="group inline-flex w-fit items-center gap-3 rounded-full bg-white px-6 py-3.5 text-sm font-medium text-black transition-transform duration-300 hover:scale-[1.03] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#ff1010]"
                         >
                             Consultar por WhatsApp

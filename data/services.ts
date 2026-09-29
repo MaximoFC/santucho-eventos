@@ -16,8 +16,35 @@ export const services: Service[] = [
     },
 
     {
-        slug: "cabina-de-fotos",
+        slug: "sonido",
         number: "02",
+        category: "PRODUCCIÓN TÉCNICA",
+        title: "Sonido",
+        description:
+            "Brindamos sistemas de sonido profesional con equipos de alta calidad para garantizar una reproducción clara.",
+        image: {
+            src: "/images/services/sonido.jpeg",
+            alt: "Equipos de sonido profesional montados para un evento",
+        },
+        pricing: "Según el tamaño del espacio y la cantidad de personas.",
+    },
+
+    {
+        slug: "iluminacion",
+        number: "03",
+        category: "PRODUCCIÓN TÉCNICA",
+        title: "Iluminación",
+        description:
+            "Diseñamos ambientes únicos con iluminación profesional para realzar cada momento del evento.",
+        image: {
+            src: "/images/services/iluminacion.jpeg",
+            alt: "Iluminación profesional en la pista de un evento",
+        },
+    },
+
+    {
+        slug: "cabina-de-fotos",
+        number: "04",
         category: "ENTRETENIMIENTO",
         title: "Cabina de fotos",
         description:
@@ -35,7 +62,7 @@ export const services: Service[] = [
 
     {
         slug: "decoracion",
-        number: "03",
+        number: "05",
         category: "AMBIENTACIÓN",
         title: "Decoración",
         description:
@@ -49,7 +76,7 @@ export const services: Service[] = [
 
     {
         slug: "pantalla-led",
-        number: "04",
+        number: "06",
         category: "PRODUCCIÓN TÉCNICA",
         title: "Pantalla LED",
         description:
@@ -72,7 +99,7 @@ export const services: Service[] = [
 
     {
         slug: "ambientacion",
-        number: "05",
+        number: "07",
         category: "AMBIENTACIÓN",
         title: "Ambientación",
         description:
@@ -97,7 +124,7 @@ export const services: Service[] = [
 
     {
         slug: "entretenimiento",
-        number: "06",
+        number: "08",
         category: "ENTRETENIMIENTO",
         title: "Entretenimiento",
         description:

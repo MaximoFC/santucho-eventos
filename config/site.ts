@@ -28,9 +28,9 @@ export const siteConfig = {
 
   contact: {
     // Solo dígitos, formato internacional: 549 + característica + número (ej: "5493811234567").
-    whatsapp: "5493816719779",
-    // Número para eventos (peñas y bingos, semanas, matinées, fiestas).
-    eventsWhatsapp: "5493816978042",
+    whatsapp: "5493816978042",
+    // Número para decoración, ambientación, entretenimiento y animación.
+    entertainmentWhatsapp: "5493816719779",
     whatsappMessage: "Hola Santucho, quiero consultar por un evento.",
     instagram: "https://www.instagram.com/santucho.producciones/",
     facebook: "https://www.facebook.com/share/1JTdLxt5pn/",
